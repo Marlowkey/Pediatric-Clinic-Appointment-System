@@ -8,6 +8,17 @@
                 <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
             </div>
         @endif
+
+        @if ($errors->any())
+            <div class="alert alert-danger alert-dismissible" role="alert">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
+            </div>
+        @endif
         <div class="container-xxl flex-grow-1 container-p-y">
             <div class="row">
                 <div class="col-md-12">
@@ -74,13 +85,6 @@
                                                 <input type="hidden" name="status" value="accepted">
                                                 <button type="submit" class="btn btn-success btn-sm">Accept</button>
                                             </form>
-                                            {{--
-                                        <form action="{{ route('reservations.updateStatus', $reservation->id) }}" method="POST" class="d-inline">
-                                            @csrf
-                                            @method('PATCH')
-                                            <input type="hidden" name="status" value="rejected">
-                                            <button type="submit" class="btn btn-danger btn-sm">Reject</button>
-                                        </form> --}}
 
                                             <button class="btn btn-primary btn-sm" data-bs-toggle="modal"
                                                 data-bs-target="#rescheduleModal{{ $reservation->id }}">
@@ -89,6 +93,89 @@
                                         </div>
                                     </td>
                                 </tr>
+
+                                <!-- Reschedule Modal -->
+                                <div class="modal fade" id="rescheduleModal{{ $reservation->id }}" tabindex="-1"
+                                    aria-hidden="true">
+                                    <div class="modal-dialog" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel1">Reschedule Appointment for
+                                                    {{ $reservation->patient_name }}</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <form action="{{ route('reservations.updateSchedule', $reservation->id) }}"
+                                                    method="POST">
+                                                    @csrf
+                                                    @method('PATCH')
+
+                                                    <div class="row">
+                                                        <div class="col mb-6 mt-2">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="Patient Name"
+                                                                    value="{{ $reservation->patient_name }}" disabled />
+                                                                <label>Patient Name</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row g-4">
+                                                        <div class="col mb-2">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="Guardian Name"
+                                                                    value="{{ $reservation->guardian_name }}" disabled />
+                                                                <label>Guardian Name</label>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col mb-2">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="text" class="form-control"
+                                                                    placeholder="Phone Number"
+                                                                    value="{{ $reservation->phone_number }}" disabled />
+                                                                <label>Phone Number</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="row g-4">
+                                                        <div class="col mb-2">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <input type="date" id="newDate" name="schedule_date"
+                                                                    class="form-control" required />
+                                                                <label for="newDate">New Schedule Date</label>
+                                                            </div>
+                                                        </div>
+
+                                                        <!-- Available Time Slot -->
+                                                        <div class="col mb-2">
+                                                            <div class="form-floating form-floating-outline">
+                                                                <select name="available_time_id" class="form-control"
+                                                                    required>
+                                                                    <option value="">Select Available Time</option>
+                                                                    @foreach ($availableTimes as $time)
+                                                                        <option value="{{ $time->id }}">
+                                                                            {{ $time->time_slot }}</option>
+                                                                    @endforeach
+                                                                </select>
+                                                                <label for="available_time_id">Available Time</label>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+
+                                                    <div class="modal-footer">
+                                                        <button type="button" class="btn btn-outline-secondary"
+                                                            data-bs-dismiss="modal">Close</button>
+                                                        <button type="submit" class="btn btn-primary">Reschedule</button>
+                                                    </div>
+                                                </form>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
                             @endforeach
                         </tbody>
                     </table>

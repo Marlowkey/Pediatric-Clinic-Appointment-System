@@ -29,11 +29,6 @@ Route::get('/contact', function () {
     return view('pages.contact'); // This is the contact.blade.php view
 })->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-
-
-Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
-
-
 // Logout
 Route::get('logout', [UserLoginController::class, 'UserLogout'])->name('logout');
 
@@ -44,10 +39,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
-Route::post('reservations/store', [ReservationController::class, 'store'])->name('reservations.store');
+Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
 Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
 Route::get('/reservations/pending', [ReservationController::class, 'pendingAppointments'])->name('reservations.pending');
 Route::get('/reservations/book', [ReservationController::class, 'bookReservations'])->name('reservations.book');
 Route::patch('/reservations/{id}/status', [ReservationController::class, 'updateStatus'])->name('reservations.updateStatus');
+Route::patch('/reservations/{id}/update', [ReservationController::class, 'updateSchedule'])->name('reservations.updateSchedule');
+
+
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin-auth.php';

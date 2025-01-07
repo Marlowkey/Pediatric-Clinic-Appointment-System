@@ -94,6 +94,6 @@ class ReservationController extends Controller
             'available_time_id' => $request->available_time_id,
         ]);
 
-        return redirect()->route('admin.pages.reservations.pending')->with('success', 'Reservation updated successfully!');
+        return redirect()->back()->with('success', 'Reservation updated successfully.');
     }
 }
