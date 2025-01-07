@@ -2,9 +2,9 @@
 
 namespace Database\Seeders;
 
-use App\Models\User;
-// use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\User;
+use App\Models\Role;
 
 class DatabaseSeeder extends Seeder
 {
@@ -13,11 +13,33 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
+        $this->call(RoleSeeder::class);
+
+        $adminRole = Role::firstOrCreate(['name' => 'admin']);
+        $doctorRole = Role::firstOrCreate(['name' => 'doctor']);
+        $patientRole = Role::firstOrCreate(['name' => 'patient']);
 
         User::factory()->create([
-            'name' => 'Test User',
+            'name' => 'Admin User',
             'email' => 'test@example.com',
+            'role_id' => $adminRole->id,
+        ]);
+
+        User::factory()->create([
+            'name' => 'Doctor User',
+            'email' => 'doctor@example.com',
+            'role_id' => $doctorRole->id,
+        ]);
+
+        User::factory()->create([
+            'name' => 'Patient User',
+            'email' => 'patient@example.com',
+            'role_id' => $patientRole->id,
+        ]);
+
+        $this->call([
+            AvailableTimeSeeder::class, 
+            ReservationSeeder::class,
         ]);
     }
 }

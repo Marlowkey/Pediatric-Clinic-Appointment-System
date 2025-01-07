@@ -1,9 +1,10 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ContactController;
+use App\Http\Controllers\ProfileController;
+use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\Auth\UserLoginController;
 
 
@@ -15,10 +16,9 @@ Route::get('/', function () {
 // User routes
 
 // Index.blade
-Route::get('/home', function () {
-    return view('pages.index');
-})->middleware(['auth', 'verified'])->name('home');;
-
+Route::get('/home', [HomeController::class, 'index'])
+    ->middleware(['auth', 'verified'])
+    ->name('home');
 
 Route::get('/about', function () {
     return view('pages.about');
@@ -31,9 +31,6 @@ Route::get('/contact', function () {
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
 
-Route::get('/reservations', function () {
-    return view('pages.booking');
-})->name('booking');
 Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
 
 
@@ -47,5 +44,10 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 });
 
+Route::post('reservations/store', [ReservationController::class, 'store'])->name('reservations.store');
+Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
+Route::get('/reservations/pending', [ReservationController::class, 'pendingAppointments'])->name('reservations.pending');
+Route::get('/reservations/book', [ReservationController::class, 'bookReservations'])->name('reservations.book');
+Route::patch('/reservations/{id}/status', [ReservationController::class, 'updateStatus'])->name('reservations.updateStatus');
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin-auth.php';

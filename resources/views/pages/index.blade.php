@@ -10,7 +10,7 @@
           <div class="mb-5 element-animate">
             <h1>Schedule Pediatric Appointments</h1>
             <p>Online, Anytime, Anywhere.</p>
-            <p><a href="{{ route('booking') }}" class="btn btn-primary">Book Now</a></p>
+            <p><a href="{{ route('reservations.book') }}" class="btn btn-primary">Book Now</a></p>
           </div>
 
         </div>
@@ -38,5 +38,5 @@
   </section>
   <!-- END section -->
 
-  
+
 @endsection
