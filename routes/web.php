@@ -17,34 +17,28 @@ Route::get('/', function () {
 // Index.blade
 Route::get('/home', function () {
     return view('pages.index');
-})->middleware(['auth', 'verified'])->name('home');
-// Route::get('/home', function () {
-//     return view('pages.index');
-// })->name('home');
+})->middleware(['auth', 'verified'])->name('home');;
 
-// About.blade
+
 Route::get('/about', function () {
     return view('pages.about');
 })->name('about');
 
-// Contact.blade
+
 Route::get('/contact', function () {
     return view('pages.contact'); // This is the contact.blade.php view
 })->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
 
-// Book now.blade
+
 Route::get('/reservations', function () {
     return view('pages.booking');
 })->name('booking');
 Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
 
-// Logout
-// Route::post('logout', [UserLoginController::class, 'destroy'])
-//     ->name('logout');
+
 // Logout
 Route::get('logout', [UserLoginController::class, 'UserLogout'])->name('logout');
-
 
 
 Route::middleware('auth')->group(function () {

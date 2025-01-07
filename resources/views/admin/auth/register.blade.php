@@ -49,24 +49,25 @@
                                     name="password"
                                     required autocomplete="current-password" />
                                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
-    
+
                                 <div class="flex items-center mt-2">
                                     <input id="showPasswordCheckbox1" type="checkbox" class="mr-2">
                                     <label for="showPasswordCheckbox1" class="text-sm text-gray-600">Show Password</label>
                                 </div>
                             </div>
 
-                            {{-- Confirm Password --}}
+                            <!-- Confirm Password -->
                             <div class="mt-4">
                                 <x-input-label for="password_confirmation" :value="__('Confirm Password')" class="text-lg fw-bolder"/>
-                                <x-text-input id="password_confirmation" class="block mt-1 w-full pr-10"
+                                <x-text-input id="confirm_password" class="block mt-1 w-full text-base"
                                     type="password"
-                                    name="password_confirmation" required autocomplete="new-password" />
-                                    <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
+                                    name="password_confirmation"
+                                    required autocomplete="new-password" />
+                                <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
 
                                 <div class="flex items-center mt-2">
-                                    <input id="showPasswordCheckbox1" type="checkbox" class="mr-2">
-                                    <label for="showPasswordCheckbox1" class="text-sm text-gray-600">Show Password</label>
+                                    <input id="showPasswordCheckbox2" type="checkbox" class="mr-2">
+                                    <label for="showPasswordCheckbox2" class="text-sm text-gray-600">Show Password</label>
                                 </div>
                             </div>
 
@@ -96,16 +97,17 @@
 
     <script>
         const passwordInput = document.getElementById('password');
-        const showPasswordCheckbox = document.getElementById('showPasswordCheckbox');
-        const togglePassword = document.getElementById('togglePassword');
+        const confirmPasswordInput = document.getElementById('confirm_password');
 
-        showPasswordCheckbox.addEventListener('change', () => {
-            passwordInput.type = showPasswordCheckbox.checked ? 'text' : 'password';
+        const showPasswordCheckbox1 = document.getElementById('showPasswordCheckbox1');
+        const showPasswordCheckbox2 = document.getElementById('showPasswordCheckbox2');
+    
+        showPasswordCheckbox1.addEventListener('change', () => {
+            passwordInput.type = showPasswordCheckbox1.checked ? 'text' : 'password';
         });
-
-        togglePassword.addEventListener('click', () => {
-            const type = passwordInput.type === 'password' ? 'text' : 'password';
-            passwordInput.type = type;
+    
+        showPasswordCheckbox2.addEventListener('change', () => {
+            confirmPasswordInput.type = showPasswordCheckbox2.checked ? 'text' : 'password';
         });
     </script>
 </x-guest-layout>

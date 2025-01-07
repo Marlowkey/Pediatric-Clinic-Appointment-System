@@ -34,16 +34,16 @@
         <div class="content">
             @include('admin.layouts.sidebar')
             @include('admin.layouts.navbar')
-            
+
             <div class="container-fluid pt-4 px-4">
                 <div class="content-wrapper">
                     @yield('content')
                 </div>
-                    
+
             </div>
             @include('admin.layouts.footer')
         </div>
-        
+
 
         <!-- JavaScript Libraries -->
         <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
@@ -58,10 +58,9 @@
         <script src="{{ asset('admin/lib/tempusdominus/js/tempusdominus-bootstrap-4.min.js') }}"></script>
         <!-- Template Javascript -->
         <script src="{{ asset('admin/js/main.js') }}"></script>
-
     </body>
 
-       
+
            <script>
                document.addEventListener('DOMContentLoaded', function() {
                    var calendarEl = document.getElementById('calendar');

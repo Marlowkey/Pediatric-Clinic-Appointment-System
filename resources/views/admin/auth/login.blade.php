@@ -41,8 +41,8 @@
                                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
                                 
                                 <div class="flex items-center mt-2">
-                                    <input id="showPasswordCheckbox1" type="checkbox" class="mr-2">
-                                    <label for="showPasswordCheckbox1" class="text-sm text-gray-600">Show Password</label>
+                                    <input id="showPasswordCheckbox" type="checkbox" class="mr-2">
+                                    <label for="showPasswordCheckbox" class="text-sm text-gray-600">Show Password</label>
                                 </div>
                             </div>
 

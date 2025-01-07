@@ -30,22 +30,34 @@ class AdminRegisterController extends Controller
     public function store(Request $request): RedirectResponse
     {
         $request->validate([
-            'name' => ['required', 'string', 'max:255'],
-            'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . Admin::class],
-            'password' => ['required', 'confirmed', Rules\Password::defaults()],
+            'email' => 'required|email',
+            'password' => 'required',
         ]);
 
-        $admin = Admin::create([
-            'name' => $request->name,
+        // $admin = Admin::create([
+        //     'name' => $request->name,
+        //     'email' => $request->email,
+        //     'password' => Hash::make($request->password),
+        // ]);
+
+        // event(new Registered($admin));
+
+        // Auth::guard('admin')->login($admin);
+
+        // Attempt login for admin guard
+        if (Auth::guard('admin')->attempt([
             'email' => $request->email,
-            'password' => Hash::make($request->password),
-        ]);
+            'password' => $request->password,
+        ])) {
+            return redirect()->intended('admin.auth.login');
+        }
 
-        event(new Registered($admin));
+        // return back()->withErrors([
+        //     'email' => 'These credentials do not match our records.',
+        // ]);
 
-        Auth::guard('admin')->login($admin);
 
         // Redirect to admin dashboard
-        return redirect(route('admin.dashboard', absolute: false));
+        // return redirect(route('admin.auth.login', absolute: false));
     }
 }
