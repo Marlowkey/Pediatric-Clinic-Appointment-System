@@ -15,4 +15,9 @@ class AvailableTime extends Model
     {
         return $this->hasMany(Reservation::class, 'available_time_id');
     }
+
+    public function unavailableTimeSlots()
+    {
+        return $this->hasMany(UnavailableTimeSlot::class);
+    }
 }

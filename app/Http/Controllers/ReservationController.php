@@ -2,22 +2,57 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AvailableTime;
+use Carbon\Carbon;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
+use App\Models\AvailableTime;
 
 class ReservationController extends Controller
 {
     public function index()
     {
-        $reservations = Reservation::with('availableTime')->paginate(10);
-        return view('admin.pages.reservations.index', compact('reservations'));
+        // Fetch all available times and format them with start and end times (12-hour format with AM/PM)
+        $availableTimes = AvailableTime::all()->map(function ($time) {
+            // Parse the start_time and end_time as Carbon instances
+            $start_time = Carbon::parse($time->start_time)->format('h:i A');
+            $end_time = Carbon::parse($time->end_time)->format('h:i A');
+
+            return [
+                'id' => $time->id,
+                'time_slot' => $start_time . ' - ' . $end_time, // 12-hour format with AM/PM
+            ];
+        });
+
+        // Fetch reservations with the related available times
+        $reservations = Reservation::with('availableTime')
+            ->where('status', 'accepted')
+            ->latest()
+            ->paginate(10);
+
+        // Pass formatted available times and reservations to the view
+        return view('admin.pages.reservations.index', compact('reservations', 'availableTimes'));
     }
 
     public function pendingAppointments()
     {
-        $reservations = Reservation::with('availableTime')->paginate(10);
-        $availableTimes = AvailableTime::all();
+        // Fetch all available times and format them with start and end times (12-hour format with AM/PM)
+        $availableTimes = AvailableTime::all()->map(function ($time) {
+            // Parse the start_time and end_time as Carbon instances
+            $start_time = Carbon::parse($time->start_time)->format('h:i A');
+            $end_time = Carbon::parse($time->end_time)->format('h:i A');
+
+            return [
+                'id' => $time->id,
+                'time_slot' => $start_time . ' - ' . $end_time, // 12-hour format with AM/PM
+            ];
+        });
+
+        // Fetch all reservations with related available times
+        $reservations = Reservation::with('availableTime')
+            ->latest()
+            ->paginate(10);
+
+        // Return the view with available times and reservations
         return view('admin.pages.reservations.pending', compact('reservations', 'availableTimes'));
     }
 
@@ -44,7 +79,9 @@ class ReservationController extends Controller
             ->exists();
 
         if ($exists) {
-            return redirect()->back()->withErrors(['available_time_id' => 'This time slot is already booked.']);
+            return redirect()
+                ->back()
+                ->withErrors(['available_time_id' => 'This time slot is already booked.']);
         }
 
         Reservation::create([
@@ -70,7 +107,6 @@ class ReservationController extends Controller
         return redirect()->back()->with('success', 'Reservation status updated successfully.');
     }
 
-    // Update an existing reservation (for rescheduling)
     public function updateSchedule(Request $request, $id)
     {
         $reservation = Reservation::findOrFail($id);
@@ -86,7 +122,9 @@ class ReservationController extends Controller
             ->exists();
 
         if ($exists) {
-            return redirect()->back()->withErrors(['available_time_id' => 'This time slot is already booked.']);
+            return redirect()
+                ->back()
+                ->withErrors(['available_time_id' => 'This time slot is already booked.']);
         }
 
         $reservation->update([

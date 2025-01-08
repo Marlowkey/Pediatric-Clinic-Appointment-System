@@ -13,7 +13,7 @@ class ReservationFactory extends Factory
     public function definition()
     {
         return [
-            'schedule_date' => $this->faker->date(),
+            'schedule_date' => $this->faker->dateTimeBetween('2025-01-01', '2025-01-31')->format('Y-m-d'),
             'available_time_id' => AvailableTime::inRandomOrder()->first()->id,
             'patient_name' => $this->faker->name(),
             'guardian_name' => $this->faker->name(),

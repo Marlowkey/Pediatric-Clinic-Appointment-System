@@ -45,6 +45,6 @@ class UserRegisterController extends Controller
 
         Auth::login($user);
 
-        return redirect(route('pages.index', absolute: false));
+        return redirect(route('home', absolute: false));
     }
 }
