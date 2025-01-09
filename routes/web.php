@@ -5,6 +5,7 @@ use App\Http\Controllers\HomeController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
+use App\Http\Controllers\AvailableTimeController;
 use App\Http\Controllers\Auth\UserLoginController;
 
 
@@ -46,6 +47,12 @@ Route::get('/reservations/book', [ReservationController::class, 'bookReservation
 Route::patch('/reservations/{id}/status', [ReservationController::class, 'updateStatus'])->name('reservations.updateStatus');
 Route::patch('/reservations/{id}/update', [ReservationController::class, 'updateSchedule'])->name('reservations.updateSchedule');
 
+Route::get('/available-times', [AvailableTimeController::class, 'index'])->name('available-times.index');
+Route::put('available-times/{id}', [AvailableTimeController::class, 'update'])->name('available-times.update');
+Route::delete('/available-times/{id}', [AvailableTimeController::class, 'destroy'])->name('available-times.delete');
+Route::post('/available-times/{id}/unavailable', [AvailableTimeController::class, 'makeUnavailable'])
+    ->name('available-times.make-unavailable');
+Route::get('available-times/{id}/make-available', [AvailableTimeController::class, 'makeAvailable'])->name('available-times.make-available');
 
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin-auth.php';

@@ -16,9 +16,9 @@
             <a href="{{ route('admin.pages.dashboard') }}" class="nav-item nav-link text-dark"><i
                     class="text-success fa fa-tachometer-alt me-2"></i>Home</a> <!-- Black font color -->
             <!-- Book Patient Link -->
-            <a href="{{ route('admin.pages.walk_in_appointments') }}" class="nav-item nav-link text-dark">
+            <a href="{{ route('available-times.index') }}" class="nav-item nav-link text-dark">
                 <i class="text-success fa fa-book me-2"></i> <!-- Add an icon for book patient -->
-                Book Patient
+               Availability
             </a>
             <a href="{{ route('reservations.index') }}" class="nav-item nav-link text-dark">
                 <i class="text-success fa fa-calendar-check me-2"></i>

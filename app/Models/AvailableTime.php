@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class AvailableTime extends Model
 {
     use HasFactory;
-
+    public $timestamps = true;
     protected $fillable = ['time_slot'];
 
     public function reservations()

@@ -11,33 +11,27 @@ class ReservationController extends Controller
 {
     public function index()
     {
-        // Fetch all available times and format them with start and end times (12-hour format with AM/PM)
         $availableTimes = AvailableTime::all()->map(function ($time) {
-            // Parse the start_time and end_time as Carbon instances
             $start_time = Carbon::parse($time->start_time)->format('h:i A');
             $end_time = Carbon::parse($time->end_time)->format('h:i A');
 
             return [
                 'id' => $time->id,
-                'time_slot' => $start_time . ' - ' . $end_time, // 12-hour format with AM/PM
+                'time_slot' => $start_time . ' - ' . $end_time,
             ];
         });
 
-        // Fetch reservations with the related available times
         $reservations = Reservation::with('availableTime')
             ->where('status', 'accepted')
             ->latest()
             ->paginate(10);
 
-        // Pass formatted available times and reservations to the view
         return view('admin.pages.reservations.index', compact('reservations', 'availableTimes'));
     }
 
     public function pendingAppointments()
     {
-        // Fetch all available times and format them with start and end times (12-hour format with AM/PM)
         $availableTimes = AvailableTime::all()->map(function ($time) {
-            // Parse the start_time and end_time as Carbon instances
             $start_time = Carbon::parse($time->start_time)->format('h:i A');
             $end_time = Carbon::parse($time->end_time)->format('h:i A');
 
@@ -47,12 +41,10 @@ class ReservationController extends Controller
             ];
         });
 
-        // Fetch all reservations with related available times
         $reservations = Reservation::with('availableTime')
             ->latest()
             ->paginate(10);
 
-        // Return the view with available times and reservations
         return view('admin.pages.reservations.pending', compact('reservations', 'availableTimes'));
     }
 

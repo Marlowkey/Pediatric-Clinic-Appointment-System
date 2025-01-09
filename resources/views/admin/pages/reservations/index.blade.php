@@ -2,13 +2,7 @@
 @section('title', 'Appointments')
 @section('content')
     <div class="container-xxl flex-grow-1 container-p-y">
-        @if (session('success'))
-            <div class="alert alert-success alert-dismissible" role="alert">
-                {{ session('success') }}
-                <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Close"></button>
-            </div>
-        @endif
-
+        <x-alerts />
         <x-heading href="" icon="ri-add-line me-1_5" headingText="Appointments" data-bs-toggle="modal"
             data-bs-target="#newScheduleModal">
             New Patient
@@ -124,8 +118,10 @@
                                     <td class="text-truncate">
                                         {{ \Carbon\Carbon::parse($reservation->schedule_date)->format('F d, Y') }}
                                     </td>
-                                    <td class="text-truncate">{{ $reservation->availableTime->start_time }} -
-                                        {{ $reservation->availableTime->end_time }}</td>
+                                    <td class="text-truncate">
+                                        {{ \Carbon\Carbon::parse($reservation->availableTime->start_time)->format('h:i A') }} -
+                                        {{ \Carbon\Carbon::parse($reservation->availableTime->end_time)->format('h:i A') }}
+                                    </td>
                                     <td class="text-truncate">{{ $reservation->message ?? 'No message' }}</td>
                                     <!-- Display reservation message -->
                                 </tr>
