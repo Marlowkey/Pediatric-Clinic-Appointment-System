@@ -23,8 +23,8 @@ class ReservationController extends Controller
 
         $reservations = Reservation::with('availableTime')
             ->where('status', 'accepted')
-            ->latest()
-            ->paginate(10);
+            ->orderBy('schedule_date', 'asc') // Sort by schedule_date in ascending order
+            ->paginate(20);
 
         return view('admin.pages.reservations.index', compact('reservations', 'availableTimes'));
     }
@@ -37,15 +37,32 @@ class ReservationController extends Controller
 
             return [
                 'id' => $time->id,
-                'time_slot' => $start_time . ' - ' . $end_time, // 12-hour format with AM/PM
+                'time_slot' => $start_time . ' - ' . $end_time,
             ];
         });
 
         $reservations = Reservation::with('availableTime')
-            ->latest()
-            ->paginate(10);
+            ->orderBy('schedule_date', 'asc') // Sort by schedule_date in ascending order
+            ->paginate(20);
 
         return view('admin.pages.reservations.pending', compact('reservations', 'availableTimes'));
+    }
+
+    public function completedAppointments()
+    {
+        $availableTimes = AvailableTime::all()->map(function ($time) {
+            $start_time = Carbon::parse($time->start_time)->format('h:i A');
+            $end_time = Carbon::parse($time->end_time)->format('h:i A');
+
+            return [
+                'id' => $time->id,
+                'time_slot' => $start_time . ' - ' . $end_time,
+            ];
+        });
+
+        $reservations = Reservation::with('availableTime')->where('status', 'completed')->orderBy('schedule_date', 'asc')->paginate(20);
+
+        return view('admin.pages.reservations.completed', compact('reservations', 'availableTimes'));
     }
 
     public function bookReservations()

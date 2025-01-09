@@ -110,7 +110,7 @@
                                 </tr>
                             </thead>
                             <tbody class="table-border-bottom-0">
-                                @forelse ($availableTimes as $slot)
+                                @forelse ($timeSlots as $slot)
                                     <tr>
                                         <td>{{ \Carbon\Carbon::parse($slot->start_time)->format('h:i A') }}</td>
                                         <td>{{ \Carbon\Carbon::parse($slot->end_time)->format('h:i A') }}</td>
@@ -221,7 +221,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="3" class="text-center">No unavailable times today</td>
+                                        <td colspan="3" class="text-center">All times are available today</td>
                                     </tr>
                                 @endforelse
                             </tbody>

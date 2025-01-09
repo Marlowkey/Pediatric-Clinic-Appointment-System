@@ -4,10 +4,10 @@
     <div class="container-xxl flex-grow-1 container-p-y">
         <x-alerts />
 
-        <x-heading href="" icon="ri-add-line me-1_5" headingText="Pending Appointments" data-bs-toggle="modal"
+        <x-heading-w-button href="" icon="ri-add-line me-1_5" headingText="Pending Appointments" data-bs-toggle="modal"
             data-bs-target="#newScheduleModal">
             New Patient
-        </x-heading>
+        </x-heading-w-button>
 
         <!-- Modal for New Schedule (Booking a New Reservation) -->
         <div class="modal fade" id="newScheduleModal" tabindex="-1" aria-hidden="true">
@@ -62,9 +62,18 @@
                                             @foreach ($availableTimes as $time)
                                                 <option value="{{ $time['id'] }}">{{ $time['time_slot'] }}</option>
                                             @endforeach
-
                                         </select>
                                         <label for="available_time_id">Available Time</label>
+                                    </div>
+                                </div>
+                            </div>
+
+                            <!-- Message Field -->
+                            <div class="row mt-3 mb-2">
+                                <div class="col">
+                                    <div class="form-floating form-floating-outline">
+                                        <textarea class="form-control" name="message" placeholder="Message (Optional)" rows="3"></textarea>
+                                        <label>Message (Optional)</label>
                                     </div>
                                 </div>
                             </div>
@@ -97,6 +106,7 @@
                                 <th class="text-truncate">Phone Number</th>
                                 <th class="text-truncate">Schedule Date</th>
                                 <th class="text-truncate">Time Slot</th>
+                                <th class="text-truncate">Reservation Message</th> <!-- New column for message -->
                                 <th class="text-truncate">Status</th>
                                 <th class="text-truncate">Actions</th>
                             </tr>
@@ -125,6 +135,8 @@
                                         {{ \Carbon\Carbon::parse($reservation->availableTime->start_time)->format('h:i A') }} -
                                         {{ \Carbon\Carbon::parse($reservation->availableTime->end_time)->format('h:i A') }}
                                     </td>
+                                    <td class="text-truncate">{{ $reservation->message ?? 'No message' }}</td>
+
                                     <td class="text-truncate">
                                         @if ($reservation->status == 'pending')
                                             <span class="badge bg-warning">Pending</span>

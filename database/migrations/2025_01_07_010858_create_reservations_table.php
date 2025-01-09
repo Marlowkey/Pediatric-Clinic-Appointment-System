@@ -19,9 +19,8 @@ return new class extends Migration
             $table->string('guardian_name');
             $table->string('phone_number');
             $table->text('message')->nullable();
-            $table->enum('status', ['pending', 'accepted', 'rejected'])->default('pending');
+            $table->enum('status', ['pending', 'accepted', 'rejected', 'completed'])->default('pending');
             $table->timestamps();
-
             $table->foreign('available_time_id')->references('id')->on('available_times')->onDelete('cascade');
         });
     }

@@ -21,7 +21,9 @@ class AvailableTimeController extends Controller
             $query->where('date', $today);
         })->get();
 
-        return view('admin.pages.available-times.index', compact('availableTimes', 'unavailableTimes'));
+        $timeSlots = AvailableTime::all();
+
+        return view('admin.pages.available-times.index', compact('availableTimes', 'unavailableTimes', 'timeSlots'));
     }
 
     public function edit($id)
