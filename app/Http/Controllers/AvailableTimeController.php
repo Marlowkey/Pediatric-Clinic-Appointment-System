@@ -35,6 +35,12 @@ class AvailableTimeController extends Controller
 
     public function update(Request $request, $id)
     {
+        $request->merge([
+            'start_time' => substr($request->start_time, 0, 5), // Extract "H:i"
+            'end_time' => substr($request->end_time, 0, 5),    // Extract "H:i"
+        ]);
+
+
         $request->validate([
             'start_time' => 'required|date_format:H:i',
             'end_time' => 'required|date_format:H:i|after:start_time',
@@ -42,16 +48,15 @@ class AvailableTimeController extends Controller
 
         $availableTime = AvailableTime::findOrFail($id);
 
-        $startTime = Carbon::createFromFormat('H:i', $request->start_time)->format('H:i:s');
-        $endTime = Carbon::createFromFormat('H:i', $request->end_time)->format('H:i:s');
-
         $availableTime->update([
-            'start_time' => $startTime,
-            'end_time' => $endTime,
+            'start_time' => $request->start_time . ':00', // Add seconds to match database format
+            'end_time' => $request->end_time . ':00',
         ]);
 
         return redirect()->route('available-times.index')->with('success', 'Available time updated successfully.');
     }
+
+
 
     public function destroy($id)
     {

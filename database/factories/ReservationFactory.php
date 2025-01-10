@@ -12,9 +12,12 @@ class ReservationFactory extends Factory
 
     public function definition()
     {
+        $availableTime = AvailableTime::inRandomOrder()->first();
+
         return [
-            'schedule_date' => $this->faker->dateTimeBetween('2025-01-01', '2025-01-31')->format('Y-m-d'),
-            'available_time_id' => AvailableTime::inRandomOrder()->first()->id,
+            'schedule_date' => $this->faker->dateTimeBetween('now', '2025-02-10')->format('Y-m-d'), 
+            'start_time' => $availableTime->start_time,
+            'end_time' => $availableTime->end_time,
             'patient_name' => $this->faker->name(),
             'guardian_name' => $this->faker->name(),
             'phone_number' => $this->faker->phoneNumber(),
@@ -22,4 +25,5 @@ class ReservationFactory extends Factory
             'status' => $this->faker->randomElement(['pending', 'accepted', 'rejected']),
         ];
     }
+
 }

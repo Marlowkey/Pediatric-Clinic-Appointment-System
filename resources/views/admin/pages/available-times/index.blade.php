@@ -136,14 +136,12 @@
                                     </tr>
 
                                     <!-- Edit Time Slot Modal -->
-                                    <div class="modal fade" id="editTimeSlotModal{{ $slot->id }}" tabindex="-1"
-                                        aria-hidden="true">
+                                    <div class="modal fade" id="editTimeSlotModal{{ $slot->id }}" tabindex="-1" aria-hidden="true">
                                         <div class="modal-dialog" role="document">
                                             <div class="modal-content">
                                                 <div class="modal-header">
                                                     <h5 class="modal-title">Edit Time Slot</h5>
-                                                    <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                        aria-label="Close"></button>
+                                                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                                                 </div>
                                                 <div class="modal-body">
                                                     <form action="{{ route('available-times.update', $slot->id) }}" method="POST">
@@ -153,20 +151,34 @@
                                                         <div class="row">
                                                             <div class="col mb-2">
                                                                 <div class="form-floating form-floating-outline">
-                                                                    <input type="time" class="form-control" name="start_time" value="{{ \Carbon\Carbon::parse($slot->start_time)->format('H:i') }}" required />
+                                                                    <input
+                                                                        type="time"
+                                                                        class="form-control"
+                                                                        name="start_time"
+                                                                        value="{{ $slot->start_time }}"
+                                                                        required
+                                                                    />
                                                                     <label>Start Time</label>
                                                                 </div>
                                                             </div>
                                                             <div class="col mb-2">
                                                                 <div class="form-floating form-floating-outline">
-                                                                    <input type="time" class="form-control" name="end_time" value="{{ \Carbon\Carbon::parse($slot->end_time)->format('H:i') }}" required />
+                                                                    <input
+                                                                        type="time"
+                                                                        class="form-control"
+                                                                        name="end_time"
+                                                                        value="{{ $slot->end_time }}"
+                                                                        required
+                                                                    />
                                                                     <label>End Time</label>
                                                                 </div>
                                                             </div>
                                                         </div>
 
                                                         <div class="modal-footer">
-                                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                                            <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">
+                                                                Close
+                                                            </button>
                                                             <button type="submit" class="btn btn-primary">Update Time Slot</button>
                                                         </div>
                                                     </form>
@@ -174,6 +186,7 @@
                                             </div>
                                         </div>
                                     </div>
+
                                 @empty
                                     <tr>
                                         <td colspan="3" class="text-center">No time slots available</td>

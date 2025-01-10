@@ -12,6 +12,8 @@ class Reservation extends Model
     protected $fillable = [
         'schedule_date',
         'available_time_id',
+        'start_time',
+        'end_time',
         'patient_name',
         'guardian_name',
         'phone_number',

@@ -46,10 +46,10 @@
                                     </td>
                                     <td>{{ $reservation->phone_number }}</td>
                                     <td>{{ \Carbon\Carbon::parse($reservation->schedule_date)->format('F d, Y') }}</td>
-                                    <td>
-                                        {{ \Carbon\Carbon::parse($reservation->availableTime->start_time)->format('h:i A') }}
+                                    <td class="text-truncate">
+                                        {{ \Carbon\Carbon::parse($reservation->start_time)->format('h:i A') }}
                                         -
-                                        {{ \Carbon\Carbon::parse($reservation->availableTime->end_time)->format('h:i A') }}
+                                        {{ \Carbon\Carbon::parse($reservation->end_time)->format('h:i A') }}
                                     </td>
                                     <td>{{ $reservation->message ?? 'No message' }}</td>
                                 </tr>

@@ -9,7 +9,7 @@ class AvailableTime extends Model
 {
     use HasFactory;
     public $timestamps = true;
-    protected $fillable = ['time_slot'];
+    protected $guarded = [];
 
     public function reservations()
     {

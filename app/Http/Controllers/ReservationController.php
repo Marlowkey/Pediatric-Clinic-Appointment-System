@@ -83,6 +83,7 @@ class ReservationController extends Controller
             'message' => 'nullable|string',
         ]);
 
+        // Check if the time slot is already booked
         $exists = Reservation::where('schedule_date', $request->schedule_date)
             ->where('available_time_id', $request->available_time_id)
             ->exists();
@@ -93,9 +94,14 @@ class ReservationController extends Controller
                 ->withErrors(['available_time_id' => 'This time slot is already booked.']);
         }
 
+        // Get the start and end time of the selected available time slot
+        $availableTime = AvailableTime::findOrFail($request->available_time_id);
+
         Reservation::create([
             'schedule_date' => $request->schedule_date,
-            'available_time_id' => $request->available_time_id,
+            'available_time_id' => $availableTime->id,
+            'start_time' => $availableTime->start_time,
+            'end_time' => $availableTime->end_time,
             'patient_name' => $request->patient_name,
             'guardian_name' => $request->guardian_name,
             'phone_number' => $request->phone_number,
@@ -105,6 +111,7 @@ class ReservationController extends Controller
         return redirect()->back()->with('success', 'Reservation created successfully!');
     }
 
+    // Update reservation status
     public function updateStatus(Request $request, $id)
     {
         $reservation = Reservation::findOrFail($id);
@@ -136,9 +143,13 @@ class ReservationController extends Controller
                 ->withErrors(['available_time_id' => 'This time slot is already booked.']);
         }
 
+        $availableTime = AvailableTime::findOrFail($request->available_time_id);
+
         $reservation->update([
             'schedule_date' => $request->schedule_date,
-            'available_time_id' => $request->available_time_id,
+            'available_time_id' => $availableTime->id, // Update the time slot
+            'start_time' => $availableTime->start_time, // Update the start time
+            'end_time' => $availableTime->end_time, // Update the end time
         ]);
 
         return redirect()->back()->with('success', 'Reservation updated successfully.');

@@ -38,7 +38,7 @@ class DatabaseSeeder extends Seeder
         ]);
 
         $this->call([
-            AvailableTimeSeeder::class, 
+            AvailableTimeSeeder::class,
             ReservationSeeder::class,
         ]);
     }
