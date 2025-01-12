@@ -2,13 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Models\AvailableTime;
+use App\Services\SmsNotificationService;
 
 class ReservationController extends Controller
 {
+    protected $smsService;
+
+    public function __construct(SmsNotificationService $smsService)
+    {
+        $this->smsService = $smsService;
+    }
     public function index()
     {
         $availableTimes = AvailableTime::all()->map(function ($time) {
@@ -79,7 +87,7 @@ class ReservationController extends Controller
             'available_time_id' => 'required|exists:available_times,id',
             'patient_name' => 'required|string|max:255',
             'guardian_name' => 'required|string|max:255',
-            'phone_number' => 'required|regex:/^09[0-9]{9}$/',
+            'phone_number' => 'required|regex:/^\+639[0-9]{9}$/', // Ensures phone number starts with +639 and is 12 digits long
             'message' => 'nullable|string',
         ]);
 
@@ -110,18 +118,30 @@ class ReservationController extends Controller
 
         return redirect()->back()->with('success', 'Reservation created successfully!');
     }
-
-    // Update reservation status
     public function updateStatus(Request $request, $id)
     {
         $reservation = Reservation::findOrFail($id);
+        $status = $request->input('status');
 
-        $reservation->update([
-            'status' => $request->input('status'),
-        ]);
+        $reservation->update(['status' => $status]);
+
+        if ($status === 'accepted') {
+            $scheduleDate = Carbon::parse($reservation->schedule_date)->format('F j, Y');
+            $startTime = Carbon::parse($reservation->start_time)->format('g:i A');
+            $endTime = Carbon::parse($reservation->end_time)->format('g:i A');
+
+            $message = "Hi {$reservation->guardian_name}, your reservation (ID: {$reservation->id}) has been accepted. " . "Scheduled for {$scheduleDate} at {$startTime} to {$endTime}.";
+
+            try {
+                $this->smsService->sendSms($reservation->phone_number, $message);
+            } catch (\Exception $e) {
+                Log::error("Failed to send SMS for reservation ID {$reservation->id}. Error: {$e->getMessage()}");
+            }
+        }
 
         return redirect()->back()->with('success', 'Reservation status updated successfully.');
     }
+
 
     public function updateSchedule(Request $request, $id)
     {
@@ -147,11 +167,23 @@ class ReservationController extends Controller
 
         $reservation->update([
             'schedule_date' => $request->schedule_date,
-            'available_time_id' => $availableTime->id, // Update the time slot
-            'start_time' => $availableTime->start_time, // Update the start time
-            'end_time' => $availableTime->end_time, // Update the end time
+            'available_time_id' => $availableTime->id,
+            'start_time' => $availableTime->start_time,
+            'end_time' => $availableTime->end_time,
+            'status' => 'accepted',
         ]);
 
-        return redirect()->back()->with('success', 'Reservation updated successfully.');
+        $scheduleDate = Carbon::parse($reservation->schedule_date)->format('F j, Y');
+        $startTime = Carbon::parse($reservation->start_time)->format('g:i A');
+        $endTime = Carbon::parse($reservation->end_time)->format('g:i A');
+
+        $message = "Hi {$reservation->guardian_name}, your reservation (ID: {$reservation->id}) has been rescheduled to {$scheduleDate} from {$startTime} to {$endTime}. Your reservation has been accepted.";
+
+        try {
+            $this->smsService->sendSms($reservation->phone_number, $message);
+        } catch (\Exception $e) {
+            Log::error("Failed to send SMS for reservation ID {$reservation->id}. Error: {$e->getMessage()}");
+        }
+        return redirect()->back()->with('success', 'Reservation updated successfully and status changed to accepted.');
     }
 }
