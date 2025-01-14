@@ -89,7 +89,11 @@
             </div>
         </div>
         <!-- Filter Form -->
-        <div class="d-flex justify-content-end mb-4">
+        <div class="d-flex justify-content-between mb-4 align-items-center">
+            <!-- Search Component -->
+            <x-search-form id="appointmentSearch" placeholder="Search Appointments" />
+
+            <!-- Date Filter -->
             <div>
                 <label for="filterDate" class="form-label">Filter by Date:</label>
                 <input type="date" id="filterDate" class="form-control" />
@@ -223,21 +227,25 @@
                                                         </div>
                                                         <div class="col mb-2">
                                                             <div class="form-floating form-floating-outline">
-                                                                <select name="available_time_id" id="available_time_id" class="form-control" required>
-                                                                    <option value="" disabled selected>Select Available Time</option>
+                                                                <select name="available_time_id" id="available_time_id"
+                                                                    class="form-control" required>
+                                                                    <option value="" disabled selected>Select
+                                                                        Available Time</option>
                                                                     @foreach ($availableTimes as $time)
-                                                                    <option value="{{ $time['id'] }}">{{ $time['time_slot'] }}</option>
-                                                                @endforeach
+                                                                        <option value="{{ $time['id'] }}">
+                                                                            {{ $time['time_slot'] }}</option>
+                                                                    @endforeach
 
                                                                 </select>
                                                                 <label for="available_time_id">Available Time</label>
                                                             </div>
                                                         </div>
-                                                    <div class="modal-footer">
-                                                        <button type="button" class="btn btn-outline-secondary"
-                                                            data-bs-dismiss="modal">Close</button>
-                                                        <button type="submit" class="btn btn-primary">Reschedule</button>
-                                                    </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-outline-secondary"
+                                                                data-bs-dismiss="modal">Close</button>
+                                                            <button type="submit"
+                                                                class="btn btn-primary">Reschedule</button>
+                                                        </div>
                                                 </form>
                                             </div>
                                         </div>
@@ -286,5 +294,31 @@
                 noDataMessage.style.display = 'none';
             }
         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const rows = document.querySelectorAll('#appointmentsTable .appointment-row');
+            originalRows = Array.from(rows).map(row => ({
+                element: row,
+                text: Array.from(row.getElementsByTagName('td')).map(cell => cell.textContent
+                    .toLowerCase()).join(' '),
+                date: row.getAttribute('data-schedule-date'),
+            }));
+
+            document.getElementById('appointmentSearch').addEventListener('input', filterTable);
+        });
+
+        function filterTable() {
+            const searchInput = document.getElementById('appointmentSearch').value.toLowerCase();
+            const tableBody = document.querySelector('#appointmentsTable tbody');
+
+            tableBody.innerHTML = '';
+
+            if (searchInput === '') {
+                originalRows.forEach(row => tableBody.appendChild(row.element));
+            } else {
+                const filteredRows = originalRows.filter(row => row.text.includes(searchInput));
+                filteredRows.forEach(row => tableBody.appendChild(row.element));
+            }
+        }
     </script>
 @endsection

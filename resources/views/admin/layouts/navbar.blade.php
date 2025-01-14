@@ -9,10 +9,7 @@
     <a href="#" class="sidebar-toggler flex-shrink-0">
         <i class="fa fa-bars"></i>
     </a>
-    <form class="d-none d-md-flex ms-4" method="GET" action="{{ route('reservations.index') }}">
-        <input class="form-control border-0" type="search" name="search" placeholder="Search" value="{{ request('search', '') }}">
-        <button type="submit" class="d-none">Search</button> <!-- Optional: hidden submit button -->
-    </form>
+
     <div class="navbar-nav align-items-center ms-auto">
         <div class="nav-item dropdown">
             <a href="#" class="nav-link" data-bs-toggle="dropdown" style="text-decoration: none;">

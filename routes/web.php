@@ -45,7 +45,7 @@ Route::middleware('auth')->group(function () {
 Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
 Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
 Route::get('/reservations/pending', [ReservationController::class, 'pendingAppointments'])->name('reservations.pending');
-Route::get('/admin/reservations/completed', [ReservationController::class, 'completedAppointments'])
+Route::get('/reservations/completed', [ReservationController::class, 'completedAppointments'])
     ->name('reservations.completed');
 Route::get('/reservations/book', [ReservationController::class, 'bookReservations'])->name('reservations.book');
 Route::patch('/reservations/{id}/status', [ReservationController::class, 'updateStatus'])->name('reservations.updateStatus');
@@ -59,11 +59,9 @@ Route::post('/available-times/{id}/unavailable', [AvailableTimeController::class
 Route::get('available-times/{id}/make-available', [AvailableTimeController::class, 'makeAvailable'])->name('available-times.make-available');
 
 Route::resource('users', UserController::class);
-// Define the route for the general search
-Route::get('/reservations', [SearchController::class, 'index'])->name('reservations.index');
 
-// Define routes for pending and completed appointments with specific filters
-Route::get('/reservations/pending', [SearchController::class, 'pendingAppointments'])->name('reservations.pending');
-Route::get('/reservations/completed', [SearchController::class, 'completedAppointments'])->name('reservations.completed');
+Route::get('/reservations/search', [SearchController::class, 'index'])->name('reservations.index.search');
+Route::get('/reservations/pending/search', [SearchController::class, 'pendingAppointments'])->name('reservations.pending.search');
+Route::get('/reservations/completed/search', [SearchController::class, 'completedAppointments'])->name('reservations.completed.search');
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin-auth.php';

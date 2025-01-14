@@ -23,13 +23,15 @@
                             <div class="row g-4">
                                 <div class="col mb-3">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" name="name" placeholder="Name" required />
+                                        <input type="text" class="form-control" name="name" placeholder="Name"
+                                            required />
                                         <label>Name</label>
                                     </div>
                                 </div>
                                 <div class="col mb-3">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="email" class="form-control" name="email" placeholder="Email" required />
+                                        <input type="email" class="form-control" name="email" placeholder="Email"
+                                            required />
                                         <label>Email</label>
                                     </div>
                                 </div>
@@ -37,7 +39,8 @@
                             <div class="row g-4">
                                 <div class="col mb-3">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="password" class="form-control" name="password" placeholder="Password" required />
+                                        <input type="password" class="form-control" name="password" placeholder="Password"
+                                            required />
                                         <label>Password</label>
                                     </div>
                                 </div>
@@ -53,7 +56,8 @@
                                 </div>
                             </div>
                             <div class="modal-footer">
-                                <button type="button" class="btn btn-outline-secondary" data-bs-dismiss="modal">Close</button>
+                                <button type="button" class="btn btn-outline-secondary"
+                                    data-bs-dismiss="modal">Close</button>
                                 <button type="submit" class="btn btn-primary">Add User</button>
                             </div>
                         </form>
@@ -62,11 +66,15 @@
             </div>
         </div>
 
-        <!-- Filter Form -->
-        <div class="d-flex justify-content-end mb-4">
-            <div>
+
+        <div class="d-flex justify-content-between mb-4 align-items-center">
+            <!-- Search Component -->
+            <x-search-form id="appointmentSearch" placeholder="Search Appointments" />
+
+            <!-- Date Filter -->
+            <div class="me-3">
                 <label for="filterRole" class="form-label">Filter by Role:</label>
-                <select id="filterRole" class="form-control" onchange="filterByRole()">
+                <select id="filterRole" class="form-control" onchange="filterTable()">
                     <option value="">All Roles</option>
                     @foreach ($roles as $role)
                         <option value="{{ $role->id }}">{{ ucfirst($role->name) }}</option>
@@ -91,7 +99,18 @@
                         <tbody>
                             @foreach ($users as $user)
                                 <tr data-role="{{ $user->role->id }}">
-                                    <td>{{ $user->name }}</td>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            <div class="avatar avatar-sm me-4">
+                                                <img src="{{ asset('assets/img/avatars/' . (($user->id % 7) + 1) . '.png') }}"
+                                                    alt="Avatar" class="rounded-circle" />
+                                            </div>
+                                            <div>
+                                                <h6 class="mb-0 text-truncate"> {{ $user->name }}
+                                                </h6>
+                                            </div>
+                                        </div>
+                                    </td>
                                     <td>{{ $user->email }}</td>
                                     <td>{{ ucfirst($user->role->name) }}</td>
                                     <td>
@@ -101,7 +120,8 @@
                                                 data-bs-target="#editUserModal{{ $user->id }}">Edit</button>
 
                                             <!-- Delete Form -->
-                                            <form action="{{ route('users.destroy', $user->id) }}" method="POST" class="d-inline">
+                                            <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                                class="d-inline">
                                                 @csrf
                                                 @method('DELETE')
                                                 <button type="submit" class="btn btn-danger btn-sm">Delete</button>
@@ -111,12 +131,14 @@
                                 </tr>
 
                                 <!-- Edit User Modal -->
-                                <div class="modal fade" id="editUserModal{{ $user->id }}" tabindex="-1" aria-hidden="true">
+                                <div class="modal fade" id="editUserModal{{ $user->id }}" tabindex="-1"
+                                    aria-hidden="true">
                                     <div class="modal-dialog" role="document">
                                         <div class="modal-content">
                                             <div class="modal-header">
                                                 <h5 class="modal-title">Edit User</h5>
-                                                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                    aria-label="Close"></button>
                                             </div>
                                             <div class="modal-body">
                                                 <form action="{{ route('users.update', $user->id) }}" method="POST">
@@ -124,22 +146,27 @@
                                                     @method('PATCH')
                                                     <div class="mb-3">
                                                         <label for="name" class="form-label">Name</label>
-                                                        <input type="text" class="form-control" name="name" value="{{ $user->name }}" required>
+                                                        <input type="text" class="form-control" name="name"
+                                                            value="{{ $user->name }}" required>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="email" class="form-label">Email</label>
-                                                        <input type="email" class="form-control" name="email" value="{{ $user->email }}" required>
+                                                        <input type="email" class="form-control" name="email"
+                                                            value="{{ $user->email }}" required>
                                                     </div>
                                                     <div class="mb-3">
-                                                        <label for="password" class="form-label">Password (leave empty if not changing)</label>
-                                                        <input type="password" class="form-control" name="password" placeholder="Password">
+                                                        <label for="password" class="form-label">Password (leave empty if
+                                                            not changing)</label>
+                                                        <input type="password" class="form-control" name="password"
+                                                            placeholder="Password">
                                                     </div>
 
                                                     <div class="mb-3">
                                                         <label for="role" class="form-label">Role</label>
                                                         <select name="role_id" class="form-control" required>
                                                             @foreach ($roles as $role)
-                                                                <option value="{{ $role->id }}" {{ $user->role_id == $role->id ? 'selected' : '' }}>
+                                                                <option value="{{ $role->id }}"
+                                                                    {{ $user->role_id == $role->id ? 'selected' : '' }}>
                                                                     {{ ucfirst($role->name) }}
                                                                 </option>
                                                             @endforeach
@@ -162,21 +189,45 @@
             </div>
         </div>
     </div>
-    @section('scripts')
+@section('scripts')
     <script>
-        function filterByRole() {
-            const role = document.getElementById('filterRole').value.toLowerCase();
+        document.addEventListener('DOMContentLoaded', () => {
             const rows = document.querySelectorAll('#usersTable tbody tr');
 
-            rows.forEach(row => {
-                const userRole = row.dataset.role.toLowerCase();
-                if (role === '' || userRole === role) {
-                    row.style.display = '';
-                } else {
-                    row.style.display = 'none';
-                }
-            });
+            // Store the original rows, capturing both the user name and the user role
+            originalRows = Array.from(rows).map(row => ({
+                element: row,
+                name: row.querySelector('td:nth-child(1)').textContent.toLowerCase(),
+                email: row.querySelector('td:nth-child(2)').textContent.toLowerCase(),
+                role: row.getAttribute('data-role').toLowerCase(),
+            }));
+
+            // Add event listeners for the search input and role filter
+            document.getElementById('appointmentSearch').addEventListener('input', filterTable);
+            document.getElementById('filterRole').addEventListener('change', filterTable);
+        });
+
+        function filterTable() {
+            const searchQuery = document.getElementById('appointmentSearch').value.toLowerCase();
+            const roleFilter = document.getElementById('filterRole').value.toLowerCase();
+            const tableBody = document.querySelector('#usersTable tbody');
+
+            // Clear the table body
+            tableBody.innerHTML = '';
+
+            if (searchQuery === '' && roleFilter === '') {
+                // If both search and role filters are empty, show all rows
+                originalRows.forEach(row => tableBody.appendChild(row.element));
+            } else {
+                // Filter the rows based on search and role
+                const filteredRows = originalRows.filter(row =>
+                    row.name.includes(searchQuery) &&
+                    (roleFilter === '' || row.role === roleFilter)
+                );
+
+                filteredRows.forEach(row => tableBody.appendChild(row.element));
+            }
         }
     </script>
-    @endsection
+@endsection
 @endsection

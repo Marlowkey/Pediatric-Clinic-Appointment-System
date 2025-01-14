@@ -6,6 +6,7 @@
         <x-heading>
             Appointments
         </x-heading>
+
         <!-- Modal for New Schedule (Booking a New Reservation) -->
         <div class="modal fade" id="newScheduleModal" tabindex="-1" aria-hidden="true">
             <div class="modal-dialog" role="document">
@@ -85,9 +86,11 @@
                 </div>
             </div>
         </div>
-
         <!-- Filter Form -->
-        <div class="d-flex justify-content-end mb-4">
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <!-- Search Form -->
+            <x-search-form id="appointmentSearch" placeholder="Search Appointments" />
+            <!-- Date Filter -->
             <div>
                 <label for="filterDate" class="form-label">Filter by Date:</label>
                 <input type="date" id="filterDate" class="form-control" />
@@ -137,7 +140,8 @@
                                     <td>
                                         <!-- Complete Appointment Button -->
                                         @if ($reservation->status !== 'completed')
-                                            <form action="{{ route('reservations.updateStatus', $reservation->id) }}" method="POST">
+                                            <form action="{{ route('reservations.updateStatus', $reservation->id) }}"
+                                                method="POST">
                                                 @csrf
                                                 @method('PATCH')
                                                 <input type="hidden" name="status" value="completed">
@@ -196,6 +200,32 @@
                     noDataMessage.style.display = 'none';
                 }
             });
+
+            document.addEventListener('DOMContentLoaded', () => {
+                const rows = document.querySelectorAll('#appointmentsTable .appointment-row');
+                originalRows = Array.from(rows).map(row => ({
+                    element: row,
+                    text: Array.from(row.getElementsByTagName('td')).map(cell => cell.textContent
+                        .toLowerCase()).join(' '),
+                    date: row.getAttribute('data-schedule-date'),
+                }));
+
+                document.getElementById('appointmentSearch').addEventListener('input', filterTable);
+            });
+
+            function filterTable() {
+                const searchInput = document.getElementById('appointmentSearch').value.toLowerCase();
+                const tableBody = document.querySelector('#appointmentsTable tbody');
+
+                tableBody.innerHTML = '';
+
+                if (searchInput === '') {
+                    originalRows.forEach(row => tableBody.appendChild(row.element));
+                } else {
+                    const filteredRows = originalRows.filter(row => row.text.includes(searchInput));
+                    filteredRows.forEach(row => tableBody.appendChild(row.element));
+                }
+            }
         </script>
     @endsection
 @endsection

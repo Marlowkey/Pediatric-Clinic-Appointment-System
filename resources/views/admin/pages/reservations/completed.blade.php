@@ -8,7 +8,11 @@
         </x-heading>
 
         <!-- Filter Form -->
-        <div class="d-flex justify-content-end mb-4">
+        <div class="d-flex justify-content-between mb-4 align-items-center">
+            <!-- Search Component -->
+            <x-search-form id="appointmentSearch" placeholder="Search Appointments" />
+
+            <!-- Date Filter -->
             <div>
                 <label for="filterDate" class="form-label">Filter by Date:</label>
                 <input type="date" id="filterDate" class="form-control" />
@@ -35,8 +39,8 @@
                                     <td>
                                         <div class="d-flex align-items-center">
                                             <div class="avatar avatar-sm me-4">
-                                                <img src="{{ asset('assets/img/avatars/' . (($index % 7) + 1) . '.png') }}" alt="Avatar" class="rounded-circle" />
-
+                                                <img src="{{ asset('assets/img/avatars/' . (($index % 7) + 1) . '.png') }}"
+                                                    alt="Avatar" class="rounded-circle" />
                                             </div>
                                             <div>
                                                 <h6 class="mb-0 text-truncate">{{ $reservation->patient_name }}</h6>
@@ -97,5 +101,31 @@
                 noDataMessage.style.display = 'none';
             }
         });
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const rows = document.querySelectorAll('#appointmentsTable .appointment-row');
+            originalRows = Array.from(rows).map(row => ({
+                element: row,
+                text: Array.from(row.getElementsByTagName('td')).map(cell => cell.textContent
+                    .toLowerCase()).join(' '),
+                date: row.getAttribute('data-schedule-date'),
+            }));
+
+            document.getElementById('appointmentSearch').addEventListener('input', filterTable);
+        });
+
+        function filterTable() {
+            const searchInput = document.getElementById('appointmentSearch').value.toLowerCase();
+            const tableBody = document.querySelector('#appointmentsTable tbody');
+
+            tableBody.innerHTML = '';
+
+            if (searchInput === '') {
+                originalRows.forEach(row => tableBody.appendChild(row.element));
+            } else {
+                const filteredRows = originalRows.filter(row => row.text.includes(searchInput));
+                filteredRows.forEach(row => tableBody.appendChild(row.element));
+            }
+        }
     </script>
 @endsection
