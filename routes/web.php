@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\HomeController;
+use App\Http\Controllers\UserController;
+use App\Http\Controllers\SearchController;
 use App\Http\Controllers\ContactController;
 use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
@@ -56,5 +58,12 @@ Route::post('/available-times/{id}/unavailable', [AvailableTimeController::class
     ->name('available-times.make-unavailable');
 Route::get('available-times/{id}/make-available', [AvailableTimeController::class, 'makeAvailable'])->name('available-times.make-available');
 
+Route::resource('users', UserController::class);
+// Define the route for the general search
+Route::get('/reservations', [SearchController::class, 'index'])->name('reservations.index');
+
+// Define routes for pending and completed appointments with specific filters
+Route::get('/reservations/pending', [SearchController::class, 'pendingAppointments'])->name('reservations.pending');
+Route::get('/reservations/completed', [SearchController::class, 'completedAppointments'])->name('reservations.completed');
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin-auth.php';

@@ -32,7 +32,7 @@
 
             <a href="{{ route('reservations.completed') }}" class="nav-item nav-link text-dark"><i class="text-success fa fa-file me-2"></i>Records</a>
             <!-- Black font color -->
-            <a href="chart.html" class="nav-item nav-link text-dark"><i class="text-success fa fa-user me-2"></i>Accounts</a>
+            <a href="{{ route('users.index') }}" class="nav-item nav-link text-dark"><i class="text-success fa fa-user me-2"></i>Accounts</a>
 
             <a href="{{ route('logout') }}" class="nav-item nav-link text-dark mt-auto">
                 <i class="fa fa-sign-out-alt me-2 text-danger"></i>Logout
