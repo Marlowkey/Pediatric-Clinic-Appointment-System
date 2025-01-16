@@ -75,10 +75,18 @@ class ReservationController extends Controller
 
     public function bookReservations()
     {
-        $availableTimes = AvailableTime::all();
+        $availableTimes = AvailableTime::all()->map(function ($time) {
+            $start_time = Carbon::parse($time->start_time)->format('h:i A');
+            $end_time = Carbon::parse($time->end_time)->format('h:i A');
+
+            return [
+                'id' => $time->id,
+                'time_slot' => $start_time . ' - ' . $end_time,
+            ];
+        });
+
         return view('pages.booking', compact('availableTimes'));
     }
-
     // Store a new reservation
     public function store(Request $request)
     {
