@@ -69,7 +69,7 @@
 
         <div class="d-flex justify-content-between mb-4 align-items-center">
             <!-- Search Component -->
-            <x-search-form id="appointmentSearch" placeholder="Search Appointments" />
+            <x-search-form id="appointmentSearch" placeholder="Search Users" />
 
             <!-- Date Filter -->
             <div class="me-3">

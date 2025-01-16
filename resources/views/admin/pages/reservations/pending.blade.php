@@ -18,7 +18,7 @@
                         <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route('reservations.store') }}" method="POST">
+                        <form id="newScheduleForm" action="{{ route('reservations.store') }}" method="POST">
                             @csrf
                             <div class="row">
                                 <div class="col mb-6 mt-2">
@@ -29,7 +29,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row g-4">
                                 <div class="col mb-2">
                                     <div class="form-floating form-floating-outline">
@@ -40,13 +39,12 @@
                                 </div>
                                 <div class="col mb-2">
                                     <div class="form-floating form-floating-outline">
-                                        <input type="text" class="form-control" placeholder="Phone Number"
+                                        <input type="text" class="form-control phone-number" placeholder="Phone Number"
                                             name="phone_number" required />
                                         <label>Phone Number</label>
                                     </div>
                                 </div>
                             </div>
-
                             <div class="row g-4">
                                 <div class="col mb-2">
                                     <div class="form-floating form-floating-outline">
@@ -54,7 +52,6 @@
                                         <label for="schedule_date">Schedule Date</label>
                                     </div>
                                 </div>
-
                                 <div class="col mb-2">
                                     <div class="form-floating form-floating-outline">
                                         <select name="available_time_id" class="form-control" required>
@@ -67,8 +64,6 @@
                                     </div>
                                 </div>
                             </div>
-
-                            <!-- Message Field -->
                             <div class="row mt-3 mb-2">
                                 <div class="col">
                                     <div class="form-floating form-floating-outline">
@@ -77,7 +72,6 @@
                                     </div>
                                 </div>
                             </div>
-
                             <div class="modal-footer">
                                 <button type="button" class="btn btn-outline-secondary"
                                     data-bs-dismiss="modal">Close</button>
@@ -88,6 +82,9 @@
                 </div>
             </div>
         </div>
+
+
+
         <!-- Filter Form -->
         <div class="d-flex justify-content-between mb-4 align-items-center">
             <!-- Search Component -->
@@ -320,5 +317,26 @@
                 filteredRows.forEach(row => tableBody.appendChild(row.element));
             }
         }
+
+
+        document.addEventListener('DOMContentLoaded', () => {
+            const phoneInput = document.querySelector('.phone-number');
+
+            phoneInput.addEventListener('input', (e) => {
+                let value = phoneInput.value;
+
+                if (!value.startsWith('+63')) {
+                    phoneInput.value = '+63' + value.replace(/^(\+63|\+)?/, '');
+                }
+            });
+
+            const form = document.getElementById('newScheduleForm');
+            form.addEventListener('submit', () => {
+                const value = phoneInput.value;
+                if (!value.startsWith('+63')) {
+                    phoneInput.value = '+63' + value.replace(/^(\+63|\+)?/, '');
+                }
+            });
+        });
     </script>
 @endsection
