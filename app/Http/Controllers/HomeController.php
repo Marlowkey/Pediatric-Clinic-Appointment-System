@@ -12,12 +12,8 @@ class HomeController extends Controller
     {
         $user = Auth::user();
 
-        if ($user->role->name == 'admin') {
+        if (in_array($user->role->name, ['admin', 'doctor'])) {
             return view('admin.pages.dashboard');
-        } elseif ($user->role->name == 'doctor') {
-            return view('pages.doctor-home');
-        } elseif ($user->role->name == 'patient') {
-            return view('pages.index');
         }
 
         return view('pages.index');

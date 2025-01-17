@@ -94,26 +94,4 @@
     <script src="{{ asset('admin/js/main.js') }}"></script>
 </body>
 
-
-<script>
-    document.addEventListener('DOMContentLoaded', function() {
-        var calendarEl = document.getElementById('calendar');
-        var calendar = new FullCalendar.Calendar(calendarEl, {
-            initialView: 'dayGridMonth',
-            events: [
-                // Example events
-                {
-                    title: 'Appointment 1',
-                    start: '2024-11-25'
-                },
-                {
-                    title: 'Appointment 2',
-                    start: '2024-11-26'
-                }
-            ]
-        });
-        calendar.render();
-    });
-</script>
-
 </html>

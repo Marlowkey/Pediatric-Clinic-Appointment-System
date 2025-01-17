@@ -15,16 +15,20 @@
             <a href="#" class="nav-link" data-bs-toggle="dropdown" style="text-decoration: none;">
                 <div class="d-flex align-items-center">
                     <div class="avatar avatar-sm me-3">
-                        <img src="{{ asset('logo/admin.jpg') }}" alt="Avatar" class="rounded-circle" />
+                        @if (auth()->user()->role->name === 'admin')
+                            <img src="{{ asset('logo/admin.jpg') }}" alt="Avatar" class="rounded-circle" />
+                        @elseif (auth()->user()->role->name === 'doctor')
+                        <img src="{{ asset('logo/doctor.jpg') }}" alt="Avatar" class="rounded-circle" />
+                        @endif
                     </div>
                     <span class="d-none d-lg-inline-flex">{{ Auth::user()->name }}</span>
                 </div>
             </a>
 
             <div class="dropdown-menu dropdown-menu-end bg-light border-0 rounded-0 rounded-bottom m-0">
-                <a href="{{ route('profile.edit') }}" class="dropdown-item">My Profile</a>
-                <a href="#" class="dropdown-item">Settings</a>
-                <a href="{{ route('admin.logout') }}" class="dropdown-item">Log Out</a>
+                {{-- <a href="{{ route('profile.edit') }}" class="dropdown-item">My Profile</a>
+                <a href="#" class="dropdown-item">Settings</a> --}}
+                <a href="{{ route('logout') }}" class="dropdown-item">Log Out</a>
             </div>
         </div>
     </div>
