@@ -22,11 +22,10 @@
     <body>
         <div class="content">
             @include('layouts.navbar_user')
-            
                 <div class="content-wrapper">
                     @yield('content')
                 </div>
-                    
+
             @include('layouts.footer_user')
         </div>
 
@@ -40,10 +39,10 @@
         <script src="{{ asset('user/js/jquery.stellar.min.js') }}"></script>
         <script src="{{ asset('user/js/main.js') }}"></script>
 
-    
+
         <script src="{{ asset('user/js/jquery.magnific-popup.min.js') }}"></script>
         <script src="{{ asset('user/js/magnific-popup-options.js') }}"></script>
-    
+
         <script src="js/main.js"></script>
     </body>
 </html>

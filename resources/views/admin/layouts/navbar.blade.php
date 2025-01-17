@@ -18,7 +18,7 @@
                         @if (auth()->user()->role->name === 'admin')
                             <img src="{{ asset('logo/admin.jpg') }}" alt="Avatar" class="rounded-circle" />
                         @elseif (auth()->user()->role->name === 'doctor')
-                        <img src="{{ asset('logo/doctor.jpg') }}" alt="Avatar" class="rounded-circle" />
+                            <img src="{{ asset('logo/doctor.jpg') }}" alt="Avatar" class="rounded-circle" />
                         @endif
                     </div>
                     <span class="d-none d-lg-inline-flex">{{ Auth::user()->name }}</span>
