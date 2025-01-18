@@ -32,7 +32,7 @@ class ReservationController extends Controller
         $reservations = Reservation::with('availableTime')
             ->where('status', 'accepted')
             ->orderBy('schedule_date', 'asc') // Sort by schedule_date in ascending order
-            ->paginate(20);
+            ->get();
 
         return view('admin.pages.reservations.index', compact('reservations', 'availableTimes'));
     }
@@ -51,7 +51,7 @@ class ReservationController extends Controller
 
         $reservations = Reservation::with('availableTime')
             ->orderBy('schedule_date', 'asc') // Sort by schedule_date in ascending order
-            ->paginate(20);
+            ->get();
 
         return view('admin.pages.reservations.pending', compact('reservations', 'availableTimes'));
     }
@@ -68,7 +68,7 @@ class ReservationController extends Controller
             ];
         });
 
-        $reservations = Reservation::with('availableTime')->where('status', 'completed')->orderBy('schedule_date', 'asc')->paginate(20);
+        $reservations = Reservation::with('availableTime')->where('status', 'completed')->orderBy('schedule_date', 'asc')->get();
 
         return view('admin.pages.reservations.completed', compact('reservations', 'availableTimes'));
     }

@@ -166,7 +166,18 @@
                         <p>No data available for the selected date.</p>
                     </div>
                     <div class="d-flex justify-content-center mt-4">
-                        {{ $reservations->links('pagination::bootstrap-5') }}
+                        <nav>
+                            <ul class="pagination" id="paginationLinks">
+                                <li class="page-item" id="prevPage">
+                                    <a class="page-link" href="javascript:void(0)">Previous</a>
+                                </li>
+                                <!-- Page numbers will be dynamically added here -->
+                                <li class="page-item" id="nextPage">
+                                    <a class="page-link" href="javascript:void(0)">Next</a>
+                                </li>
+                            </ul>
+                        </nav>
+                        {{-- {{ $reservations->links('pagination::bootstrap-5') }} --}}
                     </div>
                 </div>
             </div>
@@ -177,55 +188,122 @@
 
     @section('scripts')
         <script>
-            document.getElementById('filterDate').addEventListener('change', function() {
-                var filterDate = this.value;
-                var rows = document.querySelectorAll('#appointmentsTable .appointment-row');
-                var noDataMessage = document.getElementById('noDataMessage');
-                var visibleRows = 0;
-
-                rows.forEach(function(row) {
-                    var rowDate = row.getAttribute('data-schedule-date');
-
-                    if (!filterDate || rowDate === filterDate) {
-                        row.style.display = '';
-                        visibleRows++;
-                    } else {
-                        row.style.display = 'none';
-                    }
-                });
-
-                if (visibleRows === 0) {
-                    noDataMessage.style.display = 'block';
-                } else {
-                    noDataMessage.style.display = 'none';
-                }
-            });
-
             document.addEventListener('DOMContentLoaded', () => {
                 const rows = document.querySelectorAll('#appointmentsTable .appointment-row');
-                originalRows = Array.from(rows).map(row => ({
+                const rowsPerPage = 15; // Adjust this value as needed
+                let currentPage = 1;
+                let originalRows = Array.from(rows).map(row => ({
                     element: row,
                     text: Array.from(row.getElementsByTagName('td')).map(cell => cell.textContent
                         .toLowerCase()).join(' '),
                     date: row.getAttribute('data-schedule-date'),
                 }));
 
-                document.getElementById('appointmentSearch').addEventListener('input', filterTable);
-            });
+                // Function to render rows for the current page
+                function renderPage(rowsToRender) {
+                    const tableBody = document.querySelector('#appointmentsTable tbody');
+                    tableBody.innerHTML = ''; // Clear current rows
+                    rowsToRender.forEach(row => tableBody.appendChild(row.element));
 
-            function filterTable() {
-                const searchInput = document.getElementById('appointmentSearch').value.toLowerCase();
-                const tableBody = document.querySelector('#appointmentsTable tbody');
+                    const noDataMessage = document.getElementById('noDataMessage');
+                    const paginationLinks = document.getElementById('paginationLinks');
 
-                tableBody.innerHTML = '';
-
-                if (searchInput === '') {
-                    originalRows.forEach(row => tableBody.appendChild(row.element));
-                } else {
-                    const filteredRows = originalRows.filter(row => row.text.includes(searchInput));
-                    filteredRows.forEach(row => tableBody.appendChild(row.element));
+                    if (rowsToRender.length === 0) {
+                        noDataMessage.style.display = 'block'; // Show No Data message
+                        paginationLinks.classList.add('invisible'); // Hide pagination with 'invisible' class
+                    } else {
+                        noDataMessage.style.display = 'none'; // Hide No Data message
+                        paginationLinks.classList.remove('invisible'); // Show pagination by removing 'invisible' class
+                        updatePaginationLinks(Math.ceil(rowsToRender.length / rowsPerPage)); // Update pagination links
+                    }
                 }
-            }
+
+                // Function to paginate the rows
+                function paginate(rows) {
+                    const totalPages = Math.ceil(rows.length / rowsPerPage);
+                    const start = (currentPage - 1) * rowsPerPage;
+                    const end = currentPage * rowsPerPage;
+                    const paginatedRows = rows.slice(start, end);
+
+                    renderPage(paginatedRows);
+                    updatePaginationLinks(totalPages);
+                }
+
+                // Function to update pagination links
+                function updatePaginationLinks(totalPages) {
+                    const paginationLinks = document.getElementById('paginationLinks');
+
+                    paginationLinks.innerHTML = '';
+
+                    paginationLinks.innerHTML = `
+        <li class="page-item ${currentPage === 1 ? 'disabled' : ''}" id="prevPage">
+            <a class="page-link" href="javascript:void(0)" aria-label="Previous">
+                <span aria-hidden="true">&laquo;</span>
+            </a>
+        </li>
+    `;
+
+                    // Add page numbers
+                    for (let i = 1; i <= totalPages; i++) {
+                        paginationLinks.innerHTML += `
+            <li class="page-item ${i === currentPage ? 'active' : ''}" data-page="${i}">
+                <a class="page-link" href="javascript:void(0)">${i}</a>
+            </li>
+        `;
+                    }
+
+                    paginationLinks.innerHTML += `
+        <li class="page-item ${currentPage === totalPages ? 'disabled' : ''}" id="nextPage">
+            <a class="page-link" href="javascript:void(0)" aria-label="Next">
+                <span aria-hidden="true">&raquo;</span>
+            </a>
+        </li>
+    `;
+                }
+
+                // Event listener for pagination link clicks
+                document.getElementById('paginationLinks').addEventListener('click', function(e) {
+                    if (e.target && e.target.tagName === 'A') {
+                        const clickedPage = e.target.closest('.page-item').dataset.page;
+                        if (clickedPage) {
+                            currentPage = parseInt(clickedPage);
+                        }
+
+                        if (e.target.closest('#prevPage') && currentPage > 1) {
+                            currentPage--;
+                        }
+                        if (e.target.closest('#nextPage') && currentPage < Math.ceil(originalRows.length /
+                                rowsPerPage)) {
+                            currentPage++;
+                        }
+
+                        paginate(originalRows);
+                    }
+                });
+
+                // Function to filter the table based on search input
+                function filterTable() {
+                    const searchInput = document.getElementById('appointmentSearch').value.toLowerCase();
+                    const filterDate = document.getElementById('filterDate').value;
+                    let filteredRows = originalRows.filter(row => row.text.includes(searchInput));
+
+                    if (filterDate) {
+                        filteredRows = filteredRows.filter(row => row.date === filterDate);
+                    }
+
+                    currentPage = 1; // Reset to the first page when filtering
+                    paginate(filteredRows);
+                }
+
+                // Event listener for search input
+                document.getElementById('appointmentSearch').addEventListener('input', filterTable);
+
+                // Event listener for filter date change
+                document.getElementById('filterDate').addEventListener('change', filterTable);
+
+                // Initial pagination setup
+                paginate(originalRows);
+            });
         </script>
     @endsection
 @endsection
