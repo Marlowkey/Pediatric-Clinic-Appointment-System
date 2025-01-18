@@ -3,9 +3,11 @@
 @section('title', 'Booking')
 
 @section('content')
+
     <section class="site-hero overlay" data-stellar-background-ratio="0.5"
         style="background-image: url({{ asset('user/images/bg.png') }});">
         <div class="container">
+
             <div class="row align-items-center site-hero-inner justify-content-center">
                 <div class="col-md-12 text-center">
                     <div class="mb-5 element-animate">
@@ -18,7 +20,13 @@
     </section>
 
     <section class="site-section">
+
         <div class="container">
+            <div class="row">
+                <div class="col-12" style="margin-bottom: 10px;">
+                    <x-alerts />
+                </div>
+            </div>
             <div class="row">
                 <!-- Reservation Form -->
                 <div class="col-md-6">
@@ -38,14 +46,15 @@
                                 <label for="available_time_id" style="font-weight: bold">Time</label>
                                 <div class="position-relative">
                                     <select id="available_time_id" name="available_time_id"
-                                    class="form-control border border-dark" style="color: black;" required>
-                                <option value="" disabled selected>Select option...</option>
-                                @foreach ($availableTimes as $time)
-                                    <option value="{{ $time['id'] }}">{{ $time['time_slot'] }}</option>
-                                @endforeach
-                            </select>
+                                        class="form-control border border-dark" style="color: black; height: auto; padding: 10px;" required>
+                                        <option value="" disabled selected>Select option...</option>
+                                        @foreach ($availableTimes as $time)
+                                            <option value="{{ $time['id'] }}">{{ $time['time_slot'] }}</option>
+                                        @endforeach
+                                    </select>
                                 </div>
                             </div>
+
                         </div>
 
                         <div class="row">
@@ -79,11 +88,12 @@
                             </div>
                         </div>
 
-                        <div class="row">
-                            <div class="col-md-6 form-group">
-                                <button type="submit" class="btn btn-primary">Book Now</button>
+                        <div class="row justify-content-end ">
+                            <div class="col-md-6 form-group text-end mt-3">
+                                <button type="submit" class="btn btn-primary btn-sm text-black fw-semibold">Book Now</button>
                             </div>
                         </div>
+
                     </form>
                 </div>
 

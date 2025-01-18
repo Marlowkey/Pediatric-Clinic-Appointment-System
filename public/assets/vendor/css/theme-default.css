@@ -129,36 +129,40 @@ button.list-group-item-primary.active {
 }
 
 .btn-primary {
-  color: #fff;
-  background-color: #8c57ff;
-  border-color: #8c57ff;
-}
-.btn-primary:hover {
-  color: #fff !important;
-  background-color: #7e4ee6 !important;
-  border-color: #7e4ee6 !important;
-}
-.btn-check:focus + .btn-primary, .btn-primary:focus, .btn-primary.focus {
-  color: #fff;
-  background-color: #7e4ee6;
-  border-color: #7e4ee6;
-}
-.btn-check:checked + .btn-primary, .btn-check:active + .btn-primary, .btn-primary:active, .btn-primary.active, .btn-primary.show.dropdown-toggle, .show > .btn-primary.dropdown-toggle {
-  color: #fff !important;
-  background-color: #7e4ee6 !important;
-  border-color: #7e4ee6 !important;
-}
-.btn-primary.disabled, .btn-primary:disabled {
-  color: #fff !important;
-  background-color: #8c57ff !important;
-  border-color: #8c57ff !important;
-}
+    color: #fff;
+    background-color: #8c57ff;
+    border-color: #8c57ff;
+  }
 
-.btn-group .btn-primary,
-.input-group .btn-primary {
-  border-right: 1px solid #7e4ee6;
-  border-left: 1px solid #7e4ee6;
-}
+  .btn-primary:hover {
+    color: #fff !important;
+    background-color: #28a745 !important; /* Darker green */
+    border-color: #28a745 !important; /* Darker green border */
+  }
+
+  .btn-check:focus + .btn-primary, .btn-primary:focus, .btn-primary.focus {
+    color: #fff;
+    background-color: #28a745; /* Darker green */
+    border-color: #28a745; /* Darker green border */
+  }
+
+  .btn-check:checked + .btn-primary, .btn-check:active + .btn-primary, .btn-primary:active, .btn-primary.active, .btn-primary.show.dropdown-toggle, .show > .btn-primary.dropdown-toggle {
+    color: #fff !important;
+    background-color: #28a745 !important; /* Darker green */
+    border-color: #28a745 !important; /* Darker green border */
+  }
+
+  .btn-primary.disabled, .btn-primary:disabled {
+    color: #fff !important;
+    background-color: #8c57ff !important;
+    border-color: #8c57ff !important;
+  }
+
+  .btn-group .btn-primary,
+  .input-group .btn-primary {
+    border-right: 1px solid #28a745; /* Darker green */
+    border-left: 1px solid #28a745; /* Darker green */
+  }
 
 .btn-group-vertical .btn-primary {
   border-top: 1px solid #7e4ee6;

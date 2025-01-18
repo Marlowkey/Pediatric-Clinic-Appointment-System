@@ -113,6 +113,7 @@ class ReservationController extends Controller
         // Get the start and end time of the selected available time slot
         $availableTime = AvailableTime::findOrFail($request->available_time_id);
 
+        // Create the reservation
         Reservation::create([
             'schedule_date' => $request->schedule_date,
             'available_time_id' => $availableTime->id,
@@ -124,8 +125,15 @@ class ReservationController extends Controller
             'message' => $request->message,
         ]);
 
-        return redirect()->back()->with('success', 'Reservation created successfully!');
+        // Customize the success message based on user role
+        $successMessage = 'Reservation created successfully!';
+        if (auth()->user()->role->name === 'patient') {
+            $successMessage = 'Reservation created successfully! Please wait for confirmation of your appointment.';
+        }
+
+        return redirect()->back()->with('success', $successMessage);
     }
+
     public function updateStatus(Request $request, $id)
     {
         $reservation = Reservation::findOrFail($id);
