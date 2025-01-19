@@ -50,8 +50,9 @@ class ReservationController extends Controller
         });
 
         $reservations = Reservation::with('availableTime')
-            ->orderBy('schedule_date', 'asc') // Sort by schedule_date in ascending order
-            ->get();
+        ->where('status', 'pending') // Filter by status 'pending'
+        ->orderBy('schedule_date', 'asc') // Sort by schedule_date in ascending order
+        ->get();
 
         return view('admin.pages.reservations.pending', compact('reservations', 'availableTimes'));
     }
