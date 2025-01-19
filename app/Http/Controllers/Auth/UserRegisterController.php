@@ -29,22 +29,29 @@ class UserRegisterController extends Controller
      */
     public function store(Request $request): RedirectResponse
     {
+        // Validate incoming request
         $request->validate([
             'name' => ['required', 'string', 'max:255'],
             'email' => ['required', 'string', 'lowercase', 'email', 'max:255', 'unique:' . User::class],
+            'phone' => ['nullable', 'regex:/^\+639[0-9]{9}$/', 'unique:users,phone'], // Add phone validation
             'password' => ['required', 'confirmed', Rules\Password::defaults()],
         ]);
 
+        // Create the user
         $user = User::create([
             'name' => $request->name,
             'email' => $request->email,
+            'phone' => $request->phone, // Save phone number if provided
             'password' => Hash::make($request->password),
         ]);
 
+        // Trigger the registered event
         event(new Registered($user));
 
+        // Log the user in
         Auth::login($user);
 
+        // Redirect to the home page
         return redirect(route('home', absolute: false));
     }
 }

@@ -74,9 +74,14 @@
                         <div class="row">
                             <div class="col-md-12 form-group">
                                 <label for="pNumber" style="font-weight: bold">Phone Number</label>
-                                <input type="text" id="pNumber" name="phone_number"
+                                <input
+                                    type="text"
+                                    id="pNumber"
+                                    name="phone_number"
                                     class="form-control border border-dark"
-                                    placeholder="Enter phone number (ex. +639xxxxxxxxx)" required>
+                                    placeholder="Enter phone number (ex. +639xxxxxxxxx)"
+                                    value="{{ old('phone_number', $phoneNumber) }}"
+                                    required>
                             </div>
                         </div>
 

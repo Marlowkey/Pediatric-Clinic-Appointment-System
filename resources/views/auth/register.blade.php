@@ -29,7 +29,7 @@
                                         :value="old('name')" required autofocus autocomplete="name" />
                                     <x-input-error :messages="$errors->get('name')" class="mt-2" />
                                 </div>
-                                <div class=" mb-3 form-group">
+                                <div class="mb-3 form-group">
                                     <x-input-label for="email" :value="__('Email')" class="text-lg fw-bold" />
                                     <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"
                                         :value="old('email')" required autocomplete="username" />
@@ -37,12 +37,19 @@
                                 </div>
                             </div>
 
+                            <!-- Phone Number Field -->
+                            <div class="mb-3 form-group">
+                                <x-input-label for="pNumber" :value="__('Phone Number')" class="text-lg fw-bold" />
+                                <x-text-input id="pNumber" class="block mt-1 w-full" type="text" name="phone"
+                                    :value="old('phone')" required autocomplete="phone" />
+                                <x-input-error :messages="$errors->get('phone')" class="mt-2" />
+                            </div>
+
                             <div class="mb-4 form-group">
                                 <x-input-label for="password" :value="__('Password')" class="text-lg fw-bold" />
                                 <div class="relative">
                                     <x-text-input id="password" class="block mt-1 w-full pr-10" type="password"
                                         name="password" required autocomplete="new-password" />
-                                    <!-- Eye icon for toggling password visibility -->
                                     <i id="togglePassword1" class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"></i>
                                 </div>
                                 <x-input-error :messages="$errors->get('password')" class="mt-2" />
@@ -53,7 +60,6 @@
                                 <div class="relative">
                                     <x-text-input id="password_confirmation" class="block mt-1 w-full pr-10" type="password"
                                         name="password_confirmation" required autocomplete="new-password" />
-                                    <!-- Eye icon for toggling confirm password visibility -->
                                     <i id="togglePassword2" class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"></i>
                                 </div>
                                 <x-input-error :messages="$errors->get('password_confirmation')" class="mt-2" />
@@ -80,26 +86,46 @@
                     </div>
                 </div>
             </div>
-        </div>
+        </section>
     </section>
 
     <script>
-        const passwordInput = document.getElementById('password');
-        const passwordConfirmationInput = document.getElementById('password_confirmation');
-        const togglePassword1 = document.getElementById('togglePassword1');
-        const togglePassword2 = document.getElementById('togglePassword2');
+        document.addEventListener('DOMContentLoaded', () => {
+            // Toggle password visibility
+            const passwordInput = document.getElementById('password');
+            const passwordConfirmationInput = document.getElementById('password_confirmation');
+            const togglePassword1 = document.getElementById('togglePassword1');
+            const togglePassword2 = document.getElementById('togglePassword2');
 
-        // Toggle password visibility
-        togglePassword1.addEventListener('click', () => {
-            const type = passwordInput.type === 'password' ? 'text' : 'password';
-            passwordInput.type = type;
-            togglePassword1.classList.toggle('fa-eye-slash');
-        });
+            togglePassword1.addEventListener('click', () => {
+                const type = passwordInput.type === 'password' ? 'text' : 'password';
+                passwordInput.type = type;
+                togglePassword1.classList.toggle('fa-eye-slash');
+            });
 
-        togglePassword2.addEventListener('click', () => {
-            const type = passwordConfirmationInput.type === 'password' ? 'text' : 'password';
-            passwordConfirmationInput.type = type;
-            togglePassword2.classList.toggle('fa-eye-slash');
+            togglePassword2.addEventListener('click', () => {
+                const type = passwordConfirmationInput.type === 'password' ? 'text' : 'password';
+                passwordConfirmationInput.type = type;
+                togglePassword2.classList.toggle('fa-eye-slash');
+            });
+
+            // Phone input formatting
+            const phoneInput = document.getElementById('pNumber');
+            phoneInput.addEventListener('input', () => {
+                let value = phoneInput.value;
+
+                if (!value.startsWith('+63')) {
+                    value = value.replace(/^0/, ''); // Remove leading zero
+                    phoneInput.value = '+63' + value.replace(/^(\+63|\+)?/, '');
+                }
+            });
+
+            phoneInput.addEventListener('blur', () => {
+                let value = phoneInput.value;
+                if (!value.startsWith('+63')) {
+                    phoneInput.value = '+63' + value.replace(/^(\+63|\+)?/, '');
+                }
+            });
         });
     </script>
 </x-guest-layout>

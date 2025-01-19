@@ -27,7 +27,7 @@ class LoginRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'email' => ['required', 'string', 'email'],
+            'login' => ['required', 'string'],
             'password' => ['required', 'string'],
         ];
     }
@@ -37,21 +37,19 @@ class LoginRequest extends FormRequest
      *
      * @throws \Illuminate\Validation\ValidationException
      */
-    public function authenticate(): void
+    public function authenticate()
     {
-        $this->ensureIsNotRateLimited();
+        $credentials = $this->only('password');
+        $loginInput = $this->input('login');
 
-        if (! Auth::attempt($this->only('email', 'password'), $this->boolean('remember'))) {
-            RateLimiter::hit($this->throttleKey());
+        $field = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
 
+        if (!Auth::attempt([$field => $loginInput, 'password' => $credentials['password']], $this->boolean('remember'))) {
             throw ValidationException::withMessages([
-                'email' => trans('auth.failed'),
+                'login' => __('The provided credentials are incorrect.'),
             ]);
         }
-
-        RateLimiter::clear($this->throttleKey());
     }
-
     /**
      * Ensure the login request is not rate limited.
      *

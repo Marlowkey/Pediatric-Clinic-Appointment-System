@@ -86,7 +86,11 @@ class ReservationController extends Controller
             ];
         });
 
-        return view('pages.booking', compact('availableTimes'));
+        // Pass authenticated user and their phone number
+        $user = auth()->user();
+        $phoneNumber = $user->phone ?? '';
+
+        return view('pages.booking', compact('availableTimes', 'user', 'phoneNumber'));
     }
     // Store a new reservation
     public function store(Request $request)

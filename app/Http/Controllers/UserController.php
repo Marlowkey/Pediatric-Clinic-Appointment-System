@@ -40,16 +40,19 @@ class UserController extends Controller
      */
     public function store(Request $request)
     {
+
         $validated = $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
-            'password' => 'required|string|min:8',
+            'phone' => 'required|regex:/^\+639[0-9]{9}$/|unique:users,phone',
+            'password' => 'required|string|min:8|confirmed',
             'role_id' => 'required|exists:roles,id',
         ]);
 
         User::create([
             'name' => $validated['name'],
             'email' => $validated['email'],
+            'phone' => $validated['phone'], // Save validated phone number
             'password' => Hash::make($validated['password']),
             'role_id' => $validated['role_id'],
         ]);
@@ -71,22 +74,23 @@ class UserController extends Controller
      */
     public function update(Request $request, $id)
     {
-        // Add validation for other fields, but handle password separately
         $request->validate([
             'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email,' . $id,
+            'phone' => 'required|regex:/^\+639[0-9]{9}$/|unique:users,phone,' . $id,
             'role_id' => 'required|exists:roles,id',
-            'password' => 'nullable|string|min:8|confirmed', // Only validate if password is provided
+            'password' => 'nullable|string|min:8|confirmed',
         ]);
 
         $user = User::findOrFail($id);
 
-        // Update the user data
-        $user->name = $request->name;
-        $user->email = $request->email;
-        $user->role_id = $request->role_id;
+        $user->update([
+            'name' => $request->name,
+            'email' => $request->email,
+            'phone' => $request->phone,
+            'role_id' => $request->role_id,
+        ]);
 
-        // Update password if provided
         if ($request->filled('password')) {
             $user->password = bcrypt($request->password);
         }

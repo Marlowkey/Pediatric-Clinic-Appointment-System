@@ -36,6 +36,15 @@
                                     </div>
                                 </div>
                             </div>
+                                               <!-- New Phone Field -->
+                    <div class="row g-4">
+                        <div class="col mb-3">
+                            <div class="form-floating form-floating-outline">
+                                <input type="text" class="form-control" name="phone" placeholder="Phone" required />
+                                <label>Phone</label>
+                            </div>
+                        </div>
+                    </div>
                             <div class="row g-4">
                                 <div class="col mb-3">
                                     <div class="form-floating form-floating-outline">
@@ -92,6 +101,7 @@
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
+                                <th>Phone</th>
                                 <th>Role</th>
                                 <th>Actions</th>
                             </tr>
@@ -112,6 +122,8 @@
                                         </div>
                                     </td>
                                     <td>{{ $user->email }}</td>
+                                    <td>{{ $user->phone ?? '-' }}</td>
+
                                     <td>{{ ucfirst($user->role->name) }}</td>
                                     <td>
                                         <div class="d-flex gap-2">
@@ -153,6 +165,11 @@
                                                         <label for="email" class="form-label">Email</label>
                                                         <input type="email" class="form-control" name="email"
                                                             value="{{ $user->email }}" required>
+                                                    </div>
+                                                    <div class="mb-3">
+                                                        <label for="phone" class="form-label">Phone</label>
+                                                        <input type="phone" class="form-control" name="phone"
+                                                            value="{{ $user->phone }}" required>
                                                     </div>
                                                     <div class="mb-3">
                                                         <label for="password" class="form-label">Password (leave empty if
