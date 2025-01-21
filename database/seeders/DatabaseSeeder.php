@@ -37,9 +37,12 @@ class DatabaseSeeder extends Seeder
             'role_id' => $patientRole->id,
         ]);
 
-        $this->call([
-            AvailableTimeSeeder::class,
-            ReservationSeeder::class,
-        ]);
+        User::factory()
+            ->count(15)
+            ->create([
+                'role_id' => $patientRole->id,
+            ]);
+
+        $this->call([AvailableTimeSeeder::class, ReservationSeeder::class]);
     }
 }
