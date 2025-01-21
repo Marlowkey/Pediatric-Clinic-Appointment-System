@@ -30,7 +30,7 @@
             <div class="row">
                 <!-- Reservation Form -->
                 <div class="col-md-6">
-                    <h2 class="mb-5 fw-bolder">Appointment Form</h2>
+                    <h2 class="mb-5 fw-bolder">Appointments</h2>
                     <form action="{{ route('reservations.store') }}" method="POST" onsubmit="return validateDate()">
                         @csrf
                         <div class="row">

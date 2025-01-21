@@ -2,26 +2,23 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Factories\HasFactory;
+use App\Models\User;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 
 class Reservation extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'schedule_date',
-        'available_time_id',
-        'start_time',
-        'end_time',
-        'patient_name',
-        'guardian_name',
-        'phone_number',
-        'message',
-        'status',
-    ];
+    protected $guarded = [];
     public function availableTime()
     {
         return $this->belongsTo(AvailableTime::class, 'available_time_id');
     }
+
+    public function user()
+{
+    return $this->belongsTo(User::class);
+}
+
 }

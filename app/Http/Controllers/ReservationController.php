@@ -50,9 +50,9 @@ class ReservationController extends Controller
         });
 
         $reservations = Reservation::with('availableTime')
-        ->where('status', 'pending') // Filter by status 'pending'
-        ->orderBy('schedule_date', 'asc') // Sort by schedule_date in ascending order
-        ->get();
+            ->where('status', 'pending') // Filter by status 'pending'
+            ->orderBy('schedule_date', 'asc') // Sort by schedule_date in ascending order
+            ->get();
 
         return view('admin.pages.reservations.pending', compact('reservations', 'availableTimes'));
     }
@@ -86,13 +86,33 @@ class ReservationController extends Controller
             ];
         });
 
-        // Pass authenticated user and their phone number
         $user = auth()->user();
         $phoneNumber = $user->phone ?? '';
 
         return view('pages.booking', compact('availableTimes', 'user', 'phoneNumber'));
     }
-    // Store a new reservation
+
+    public function getMyReservations()
+    {
+        $availableTimes = AvailableTime::all()->map(function ($time) {
+            $start_time = Carbon::parse($time->start_time)->format('h:i A');
+            $end_time = Carbon::parse($time->end_time)->format('h:i A');
+
+            return [
+                'id' => $time->id,
+                'time_slot' => $start_time . ' - ' . $end_time,
+            ];
+        });
+
+        $user = auth()->user();
+
+        $reservations = Reservation::where('user_id', $user->id)
+        ->orderBy('schedule_date', 'desc')
+        ->paginate(5);
+
+        return view('pages.reservations', compact('availableTimes', 'user', 'reservations'));
+    }
+
     public function store(Request $request)
     {
         $request->validate([
@@ -104,7 +124,6 @@ class ReservationController extends Controller
             'message' => 'nullable|string',
         ]);
 
-        // Check if the time slot is already booked
         $exists = Reservation::where('schedule_date', $request->schedule_date)
             ->where('available_time_id', $request->available_time_id)
             ->exists();
@@ -115,11 +134,57 @@ class ReservationController extends Controller
                 ->withErrors(['available_time_id' => 'This time slot is already booked.']);
         }
 
-        // Get the start and end time of the selected available time slot
         $availableTime = AvailableTime::findOrFail($request->available_time_id);
 
-        // Create the reservation
+        $userId = auth()->user()->id;
+
         Reservation::create([
+            'schedule_date' => $request->schedule_date,
+            'available_time_id' => $availableTime->id,
+            'start_time' => $availableTime->start_time,
+            'end_time' => $availableTime->end_time,
+            'patient_name' => $request->patient_name,
+            'guardian_name' => $request->guardian_name,
+            'phone_number' => $request->phone_number,
+            'message' => $request->message,
+            'user_id' => $userId, // Use the variable with the user ID
+        ]);
+
+        $successMessage = 'Reservation created successfully!';
+        if (auth()->user()->role->name === 'patient') {
+            $successMessage = 'Reservation created successfully! Please wait for confirmation of your appointment.';
+        }
+
+        return redirect()->back()->with('success', $successMessage);
+    }
+
+    public function update(Request $request, $id)
+    {
+        $request->validate([
+            'schedule_date' => 'required|date|after_or_equal:today',
+            'available_time_id' => 'required|exists:available_times,id',
+            'patient_name' => 'required|string|max:255',
+            'guardian_name' => 'required|string|max:255',
+            'phone_number' => 'required|regex:/^\+639[0-9]{9}$/', // Ensures phone number starts with +639 and is 12 digits long
+            'message' => 'nullable|string',
+        ]);
+
+        $reservation = Reservation::findOrFail($id);
+
+        $exists = Reservation::where('schedule_date', $request->schedule_date)
+            ->where('available_time_id', $request->available_time_id)
+            ->where('id', '!=', $reservation->id) // Exclude the current reservation
+            ->exists();
+
+        if ($exists) {
+            return redirect()
+                ->back()
+                ->withErrors(['available_time_id' => 'This time slot is already booked.']);
+        }
+
+        $availableTime = AvailableTime::findOrFail($request->available_time_id);
+
+        $reservation->update([
             'schedule_date' => $request->schedule_date,
             'available_time_id' => $availableTime->id,
             'start_time' => $availableTime->start_time,
@@ -130,10 +195,9 @@ class ReservationController extends Controller
             'message' => $request->message,
         ]);
 
-        // Customize the success message based on user role
-        $successMessage = 'Reservation created successfully!';
+        $successMessage = 'Reservation updated successfully!';
         if (auth()->user()->role->name === 'patient') {
-            $successMessage = 'Reservation created successfully! Please wait for confirmation of your appointment.';
+            $successMessage = 'Reservation updated successfully! Please wait for confirmation of your appointment.';
         }
 
         return redirect()->back()->with('success', $successMessage);
@@ -162,7 +226,6 @@ class ReservationController extends Controller
 
         return redirect()->back()->with('success', 'Reservation status updated successfully.');
     }
-
 
     public function updateSchedule(Request $request, $id)
     {
@@ -206,5 +269,14 @@ class ReservationController extends Controller
             Log::error("Failed to send SMS for reservation ID {$reservation->id}. Error: {$e->getMessage()}");
         }
         return redirect()->back()->with('success', 'Reservation updated successfully and status changed to accepted.');
+    }
+
+    public function destroy($id)
+    {
+        $reservation = Reservation::findOrFail($id);
+
+        $reservation->delete();
+
+        return redirect()->back()->with('success', 'Reservation deleted successfully!');
     }
 }

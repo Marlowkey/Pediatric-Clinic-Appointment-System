@@ -20,8 +20,8 @@ return new class extends Migration
             $table->string('phone_number');
             $table->text('message')->nullable();
             $table->time('start_time');
-            $table->time('end_time');   
-            $table->enum('status', ['pending', 'accepted', 'rejected', 'completed'])->default('pending');
+            $table->time('end_time');
+            $table->enum('status', ['pending', 'accepted', 'completed'])->default('pending');
             $table->timestamps();
             $table->foreign('available_time_id')->references('id')->on('available_times')->onDelete('set null');
         });

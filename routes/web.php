@@ -16,9 +16,7 @@ Route::get('/', function () {
     return view('auth/login');
 });
 
-// User routes
 
-// Index.blade
 Route::get('/home', [HomeController::class, 'index'])
     ->middleware(['auth', 'verified'])
     ->name('home');
@@ -29,10 +27,10 @@ Route::get('/about', function () {
 
 
 Route::get('/contact', function () {
-    return view('pages.contact'); // This is the contact.blade.php view
+    return view('pages.contact');
 })->name('contact');
 Route::post('/contact', [ContactController::class, 'store'])->name('contact.store');
-// Logout
+
 Route::get('logout', [UserLoginController::class, 'UserLogout'])->name('logout');
 
 
@@ -43,6 +41,7 @@ Route::middleware('auth')->group(function () {
 });
 
 Route::post('/reservations', [ReservationController::class, 'store'])->name('reservations.store');
+Route::get('/my-reservations', [ReservationController::class, 'getMyReservations'])->name('reservations.my_reservations');
 Route::get('/reservations', [ReservationController::class, 'index'])->name('reservations.index');
 Route::get('/reservations/pending', [ReservationController::class, 'pendingAppointments'])->name('reservations.pending');
 Route::get('/reservations/completed', [ReservationController::class, 'completedAppointments'])
@@ -50,6 +49,9 @@ Route::get('/reservations/completed', [ReservationController::class, 'completedA
 Route::get('/reservations/book', [ReservationController::class, 'bookReservations'])->name('reservations.book');
 Route::patch('/reservations/{id}/status', [ReservationController::class, 'updateStatus'])->name('reservations.updateStatus');
 Route::patch('/reservations/{id}/update', [ReservationController::class, 'updateSchedule'])->name('reservations.updateSchedule');
+Route::patch('/reservations/{id}/update-details', [ReservationController::class, 'update'])->name('reservations.update');
+Route::delete('reservations/{id}', [ReservationController::class, 'destroy'])->name('reservations.destroy');
+
 
 Route::get('/available-times', [AvailableTimeController::class, 'index'])->name('available-times.index');
 Route::put('available-times/{id}', [AvailableTimeController::class, 'update'])->name('available-times.update');
