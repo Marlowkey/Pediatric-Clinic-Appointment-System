@@ -42,7 +42,7 @@ class LoginRequest extends FormRequest
         $credentials = $this->only('password');
         $loginInput = $this->input('login');
 
-        $field = filter_var($loginInput, FILTER_VALIDATE_EMAIL) ? 'email' : 'phone';
+        $field = filter_var($loginInput, FILTER_VALIDATE_EMAIL) !== false || str_contains($loginInput, '@') ? 'email' : 'phone';
 
         if (!Auth::attempt([$field => $loginInput, 'password' => $credentials['password']], $this->boolean('remember'))) {
             throw ValidationException::withMessages([

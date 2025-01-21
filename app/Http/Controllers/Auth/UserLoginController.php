@@ -31,7 +31,6 @@ class UserLoginController extends Controller
         // goes to index
         return redirect()->intended(route('home'));
 
-        // return redirect()->intended(route('index', absolute: false));
     }
 
     /**

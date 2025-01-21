@@ -3,15 +3,15 @@
 
 <x-guest-layout>
     <x-auth-session-status class="mb-4" :status="session('status')" />
-
+    <x-alerts />
     <section class="vh-100">
         <div class="vh-100 bg-gray-100 d-flex  h-auto rounded">
             <div class="col-lg-6 d-none d-md-block rounded">
                 <img src="{{ asset('logo/splash.png') }}" alt="Login Image"
                      class="img-fluid rounded w-100 h-100" style="object-fit: cover;" />
             </div>
-
             <div class="col-lg-5 d-flex mx-6 mb-8 justify-content-center align-items-center rounded">
+
                 <div class="card-body px-6 py-2 text-black justify-content-center align-items-center"> <!-- Added shadow and rounded to the form -->
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
