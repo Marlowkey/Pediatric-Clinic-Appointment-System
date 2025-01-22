@@ -43,7 +43,7 @@
                     </div>
                 </div>
 
-                <!-- Total Patients -->
+                @if(auth()->user()->role->name === 'admin')
                 <div class="col-md-3 col-6 d-flex justify-content-center">
                     <div class="d-flex align-items-center">
                         <div class="avatar">
@@ -57,12 +57,13 @@
                         </div>
                     </div>
                 </div>
+            @endif
 
                 <!-- Monthly Reservations Chart -->
                 <div class="col-md-12 ">
                     <div class="card w-full max-w-4xl">
                         <div class="card-header">
-                            <h5 class="card-title">Appointments Overview</h5>
+                            <h4 class="card-title">Monthly Appointments Overview</h4>
                         </div>
                         <div class="card-body px-4 py-4">
                             <canvas id="reservationsChart"></canvas> <!-- The chart will be rendered here -->
