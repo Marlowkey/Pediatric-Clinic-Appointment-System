@@ -6,7 +6,9 @@
     <section class="site-hero overlay" data-stellar-background-ratio="0.5"
         style="background-image: url({{ asset('user/images/bg.png') }});">
         <div class="container">
+
             <div class="row align-items-center site-hero-inner justify-content-center">
+                <x-alerts />
                 <div class="col-md-12 text-center">
                     <div class="mb-5 element-animate">
                         <h1>Schedule Pediatric Appointments</h1>
@@ -32,7 +34,8 @@
                         <h2 class="heading text-center">Visit Us</h2>
                         <p class="mb-5 font-italic">"Convenient care at your fingertips! Book your child’s appointment
                             online today and let us take care of their health with compassion and expertise."</p>
-                        <p><a href="{{ route('about') }}" class="btn btn-primary btn-sm text-black fw-semibold">More About Us</a></p>
+                        <p><a href="{{ route('about') }}" class="btn btn-primary btn-sm text-black fw-semibold">More About
+                                Us</a></p>
                     </div>
                 </div>
                 <div class="col-md-1"></div>

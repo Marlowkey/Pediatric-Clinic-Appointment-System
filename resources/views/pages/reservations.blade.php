@@ -19,10 +19,9 @@
 
     <section class="site-section bg-gray-100">
 
-        <div class="container">
+        <div class="container" >
             <x-alerts />
             <h2 class="mb-5 fw-bolder text-start">Appointments</h2>
-
             <div class="row align-items-center">
                 <div class="col-12">
                     <div class="card overflow-hidden">
@@ -40,15 +39,14 @@
                                     </tr>
                                 </thead>
                                 <tbody class="table-border-bottom-0">
-                                    @foreach ($reservations as $index => $reservation)
+                                    @forelse ($reservations as $index => $reservation)
                                         <tr class="appointment-row"
                                             data-schedule-date="{{ \Carbon\Carbon::parse($reservation->schedule_date)->format('Y-m-d') }}">
                                             <td>
                                                 <div class="d-flex align-items-center">
                                                     <div>
                                                         <h6 class="mb-0 text-truncate">{{ $reservation->patient_name }}</h6>
-                                                        <small
-                                                            class="text-truncate">{{ $reservation->guardian_name }}</small>
+                                                        <small class="text-truncate">{{ $reservation->guardian_name }}</small>
                                                     </div>
                                                 </div>
                                             </td>
@@ -57,8 +55,7 @@
                                                 {{ \Carbon\Carbon::parse($reservation->schedule_date)->format('F d, Y') }}
                                             </td>
                                             <td class="text-truncate">
-                                                {{ \Carbon\Carbon::parse($reservation->start_time)->format('h:i A') }}
-                                                -
+                                                {{ \Carbon\Carbon::parse($reservation->start_time)->format('h:i A') }} -
                                                 {{ \Carbon\Carbon::parse($reservation->end_time)->format('h:i A') }}
                                             </td>
                                             <td class="text-truncate">{{ $reservation->message ?? 'No message' }}</td>
@@ -72,49 +69,50 @@
                                                 @endif
                                             </td>
                                             <td>
-                                                <div class="dropdown">
-                                                    <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
-                                                        data-bs-toggle="dropdown"
-                                                        @if ($reservation->status === 'confirmed') disabled @endif>
-                                                        <i class="ri-more-2-line"></i>
-                                                    </button>
-                                                    <div class="dropdown-menu">
-                                                        <!-- Edit Time Slot Button -->
-                                                        <a class="dropdown-item" href="#" data-bs-toggle="modal"
-                                                            data-bs-target="#rescheduleModal{{ $reservation->id }}">
-                                                            <i class="ri-pencil-line me-1"></i> Edit
-                                                        </a>
-                                                        <a class="dropdown-item" href="#"
-                                                            onclick="event.preventDefault(); document.getElementById('delete-form-{{ $reservation->id }}').submit();">
-                                                            <i class="ri-delete-bin-6-line me-1"></i> Delete
-                                                        </a>
+                                                @if ($reservation->status === 'pending')
+                                                    <div class="dropdown">
+                                                        <button type="button" class="btn p-0 dropdown-toggle hide-arrow" data-bs-toggle="dropdown">
+                                                            <i class="ri-more-2-line"></i>
+                                                        </button>
+                                                        <div class="dropdown-menu">
+                                                            <!-- Edit Time Slot Button -->
+                                                            <a class="dropdown-item" href="#" data-bs-toggle="modal"
+                                                               data-bs-target="#rescheduleModal{{ $reservation->id }}">
+                                                                <i class="ri-pencil-line me-1"></i> Edit
+                                                            </a>
+                                                            <a class="dropdown-item" href="#"
+                                                               onclick="event.preventDefault(); document.getElementById('delete-form-{{ $reservation->id }}').submit();">
+                                                                <i class="ri-delete-bin-6-line me-1"></i> Delete
+                                                            </a>
 
-                                                        <form id="delete-form-{{ $reservation->id }}"
-                                                            action="{{ route('reservations.destroy', $reservation->id) }}"
-                                                            method="POST" style="display: none;">
-                                                            @csrf
-                                                            @method('DELETE')
-                                                        </form>
+                                                            <form id="delete-form-{{ $reservation->id }}"
+                                                                  action="{{ route('reservations.destroy', $reservation->id) }}" method="POST" style="display: none;">
+                                                                @csrf
+                                                                @method('DELETE')
+                                                            </form>
+                                                        </div>
                                                     </div>
-                                                </div>
+                                                @else
+                                                    <!-- Display a disabled message or no actions -->
+                                                    <span class="text-muted"> ... </span>
+                                                @endif
                                             </td>
-
                                         </tr>
 
                                         <!-- Edit Modal -->
                                         <div class="modal fade" id="rescheduleModal{{ $reservation->id }}" tabindex="-1"
-                                            aria-hidden="true">
+                                             aria-hidden="true">
                                             <div class="modal-dialog" role="document">
                                                 <div class="modal-content">
                                                     <div class="modal-header">
                                                         <h5 class="modal-title">Edit Appointment for
                                                             {{ $reservation->patient_name }}</h5>
                                                         <button type="button" class="btn-close" data-bs-dismiss="modal"
-                                                            aria-label="Close"></button>
+                                                                aria-label="Close"></button>
                                                     </div>
                                                     <div class="modal-body">
                                                         <form action="{{ route('reservations.update', $reservation->id) }}"
-                                                            method="POST">
+                                                              method="POST">
                                                             @csrf
                                                             @method('PATCH')
 
@@ -123,9 +121,9 @@
                                                                 <div class="col mb-6 mt-2">
                                                                     <div class="form-floating form-floating-outline">
                                                                         <input type="text" class="form-control"
-                                                                            placeholder="Patient Name" name="patient_name"
-                                                                            value="{{ old('patient_name', $reservation->patient_name) }}"
-                                                                            required />
+                                                                               placeholder="Patient Name" name="patient_name"
+                                                                               value="{{ old('patient_name', $reservation->patient_name) }}"
+                                                                               required />
                                                                         <label>Patient Name</label>
                                                                     </div>
                                                                 </div>
@@ -136,18 +134,18 @@
                                                                 <div class="col mb-2">
                                                                     <div class="form-floating form-floating-outline">
                                                                         <input type="text" class="form-control"
-                                                                            placeholder="Guardian Name" name="guardian_name"
-                                                                            value="{{ old('guardian_name', $reservation->guardian_name) }}"
-                                                                            required />
+                                                                               placeholder="Guardian Name" name="guardian_name"
+                                                                               value="{{ old('guardian_name', $reservation->guardian_name) }}"
+                                                                               required />
                                                                         <label>Guardian Name</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col mb-2">
                                                                     <div class="form-floating form-floating-outline">
                                                                         <input type="text" class="form-control"
-                                                                            placeholder="Phone Number" name="phone_number"
-                                                                            value="{{ old('phone_number', $reservation->phone_number) }}"
-                                                                            required />
+                                                                               placeholder="Phone Number" name="phone_number"
+                                                                               value="{{ old('phone_number', $reservation->phone_number) }}"
+                                                                               required />
                                                                         <label>Phone Number</label>
                                                                     </div>
                                                                 </div>
@@ -158,28 +156,26 @@
                                                                 <div class="col mb-2">
                                                                     <div class="form-floating form-floating-outline">
                                                                         <input type="date" id="newDate"
-                                                                            name="schedule_date" class="form-control"
-                                                                            value="{{ old('schedule_date', $reservation->schedule_date) }}"
-                                                                            required />
+                                                                               name="schedule_date" class="form-control"
+                                                                               value="{{ old('schedule_date', $reservation->schedule_date) }}"
+                                                                               required />
                                                                         <label for="newDate">New Schedule Date</label>
                                                                     </div>
                                                                 </div>
                                                                 <div class="col mb-2">
                                                                     <div class="form-floating form-floating-outline">
                                                                         <select name="available_time_id"
-                                                                            id="available_time_id" class="form-control"
-                                                                            required>
-                                                                            <option value="" disabled>Select
-                                                                                Available Time</option>
+                                                                                id="available_time_id" class="form-control"
+                                                                                required>
+                                                                            <option value="" disabled>Select Available Time</option>
                                                                             @foreach ($availableTimes as $time)
                                                                                 <option value="{{ $time['id'] }}"
-                                                                                    {{ $reservation->available_time_id == $time['id'] ? 'selected' : '' }}>
+                                                                                        {{ $reservation->available_time_id == $time['id'] ? 'selected' : '' }}>
                                                                                     {{ $time['time_slot'] }}
                                                                                 </option>
                                                                             @endforeach
                                                                         </select>
-                                                                        <label for="available_time_id">Available
-                                                                            Time</label>
+                                                                        <label for="available_time_id">Available Time</label>
                                                                     </div>
                                                                 </div>
                                                             </div>
@@ -193,18 +189,22 @@
                                                             </div>
                                                             <!-- Modal Footer -->
                                                             <div class="modal-footer mt-4">
-                                                                <button type="button"
-                                                                    class="btn btn-sm btn-outline-secondary"
-                                                                    data-bs-dismiss="modal">Close</button>
-                                                                <button type="submit"
-                                                                    class="btn btn-success btn-sm">Reschedule</button>
+                                                                <button type="button" class="btn btn-sm btn-outline-secondary"
+                                                                        data-bs-dismiss="modal">Close</button>
+                                                                <button type="submit" class="btn btn-success btn-sm">Reschedule</button>
                                                             </div>
                                                         </form>
                                                     </div>
                                                 </div>
                                             </div>
                                         </div>
-                                    @endforeach
+                                    @empty
+                                        <tr>
+                                            <td colspan="7" class="text-center">
+                                                <strong>No reservations made yet.</strong>
+                                            </td>
+                                        </tr>
+                                    @endforelse
                                 </tbody>
                             </table>
                             <div class="d-flex justify-content-center mt-4">
@@ -214,6 +214,7 @@
                     </div>
                 </div>
             </div>
+
         </div>
     </section>
 @endsection

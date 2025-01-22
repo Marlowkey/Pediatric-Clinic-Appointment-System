@@ -89,8 +89,13 @@ class ReservationController extends Controller
         $user = auth()->user();
         $phoneNumber = $user->phone ?? '';
 
+        if ($phoneNumber && is_null($user->phone_verified_at)) {
+            return redirect()->route('otp.verify')->with('error', 'Please verify your phone number.');
+        }
+
         return view('pages.booking', compact('availableTimes', 'user', 'phoneNumber'));
     }
+
 
     public function getMyReservations()
     {

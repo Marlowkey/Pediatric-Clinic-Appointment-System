@@ -9,6 +9,7 @@ use App\Http\Controllers\ProfileController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\AvailableTimeController;
 use App\Http\Controllers\Auth\UserLoginController;
+use App\Http\Controllers\Auth\UserRegisterController;
 
 
 
@@ -65,5 +66,10 @@ Route::resource('users', UserController::class);
 Route::get('/reservations/search', [SearchController::class, 'index'])->name('reservations.index.search');
 Route::get('/reservations/pending/search', [SearchController::class, 'pendingAppointments'])->name('reservations.pending.search');
 Route::get('/reservations/completed/search', [SearchController::class, 'completedAppointments'])->name('reservations.completed.search');
+
+Route::get('/verify-otp', [UserRegisterController::class, 'verifyOtpView'])->name('otp.verify');
+Route::post('/verify-otp', [UserRegisterController::class, 'verifyOtp'])->name('otp.verify.submit');
+Route::post('/resend-otp', [UserRegisterController::class, 'resendOtp'])->name('otp.resend');
+
 require __DIR__ . '/auth.php';
 require __DIR__ . '/admin-auth.php';

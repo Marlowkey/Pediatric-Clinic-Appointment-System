@@ -5,21 +5,19 @@
     <x-auth-session-status class="mb-4" :status="session('status')" />
 
     <section>
-        <div class="bg-gray-100 d-flex vh-100 rounded">
-            <div class="col-lg-6 d-none d-md-block rounded">
-                <img src="{{ asset('logo/splash.png') }}" alt="Login Image" class="img-fluid rounded w-100 h-100"
-                    style="object-fit: cover;" />
+        <div class="bg-gray-100 d-flex min-h-[50vh] rounded">
+             <div class="col-lg-6 d-none d-md-block rounded">
+                <img src="{{ asset('logo/splash.png') }}" alt="Login Image" class="img-fluid rounded w-100 h-full object-cover" />
             </div>
-            <div class="col-md-6 d-flex mx-3 my-6">
+            <div class="col-md-6 d-flex justify-content-center align-items-center mx-3">
                 <div class="card-body text-black w-full max-w-lg mx-auto h-auto">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
-
-                        <div class="flex flex-col items-start mb-4 py-4">
+                        <div class="flex flex-col items-start ">
                             <h1 class="text-2xl font-bold mb-1">Register</h1>
-                            <h5 class="fw-normal mb-0 pb-2" style="letter-spacing: 1px;">Sign up to your account
-                            </h5>
-                        </div>
+                            <h5 class="fw-normal mb-0 pb-2" style="letter-spacing: 1px;">
+                                Sign up to your account. <span class="text-red-600">Please ensure your phone number is valid as an OTP will be sent to verify it.</span>
+                            </h5>                        </div>
 
                         <div class="row flex">
                             <div class="mb-3 mr-3 form-group">
@@ -86,6 +84,7 @@
                 </div>
             </div>
         </div>
+
     </section>
 
     <script>
