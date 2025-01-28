@@ -2,17 +2,30 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\AvailableTime;
-use App\Models\UnavailableTimeSlot;
-use Illuminate\Http\Request;
 use Carbon\Carbon;
+use Illuminate\Http\Request;
+use App\Models\AvailableTime;
+use App\Models\UnavailableDate;
+use App\Models\UnavailableTimeSlot;
 
 class AvailableTimeController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
+        $date = $request->get('date', now()->toDateString());
+
+        $dayOfWeek = Carbon::parse($date)->format('l');
+
         $today = Carbon::today();
 
+        $unavailableDate = UnavailableDate::where('date', $date)->first();
+
+        $isDateUnavailable = UnavailableDate::where('date', $date)->exists();
+
+        if ($dayOfWeek === 'Sunday' && !$isDateUnavailable) {
+            UnavailableDate::create(['date' => $date]);
+            $isDateUnavailable = true;
+        }
         $availableTimes = AvailableTime::whereDoesntHave('unavailableTimeSlots', function ($query) use ($today) {
             $query->where('date', $today);
         })->get();
@@ -23,7 +36,8 @@ class AvailableTimeController extends Controller
 
         $timeSlots = AvailableTime::all();
 
-        return view('admin.pages.available-times.index', compact('availableTimes', 'unavailableTimes', 'timeSlots'));
+        // Return the view with the updated data
+        return view('admin.pages.available-times.index', compact('availableTimes', 'unavailableTimes', 'timeSlots', 'date', 'dayOfWeek', 'isDateUnavailable',  'unavailableDate'));
     }
 
     public function edit($id)
@@ -37,9 +51,8 @@ class AvailableTimeController extends Controller
     {
         $request->merge([
             'start_time' => substr($request->start_time, 0, 5), // Extract "H:i"
-            'end_time' => substr($request->end_time, 0, 5),    // Extract "H:i"
+            'end_time' => substr($request->end_time, 0, 5), // Extract "H:i"
         ]);
-
 
         $request->validate([
             'start_time' => 'required|date_format:H:i',
@@ -55,8 +68,6 @@ class AvailableTimeController extends Controller
 
         return redirect()->route('available-times.index')->with('success', 'Available time updated successfully.');
     }
-
-
 
     public function destroy($id)
     {
@@ -97,5 +108,33 @@ class AvailableTimeController extends Controller
         $unavailableTimeSlot->delete();
 
         return redirect()->route('available-times.index')->with('success', 'Time slot marked as available again.');
+    }
+
+    public function makeDateUnavailable(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date',
+        ]);
+
+        $exists = UnavailableDate::where('date', $request->date)->exists();
+
+        if ($exists) {
+            return redirect()->back()->with('error', 'This date is already marked as unavailable.');
+        }
+
+        UnavailableDate::create([
+            'date' => $request->date,
+        ]);
+
+        return redirect()->route('available-times.index')->with('success', 'Date marked as unavailable.');
+    }
+
+    public function makeDateAvailable($id)
+    {
+        $unavailableDate = UnavailableDate::findOrFail($id);
+
+        $unavailableDate->delete();
+
+        return redirect()->route('available-times.index')->with('success', 'Date marked as available again.');
     }
 }

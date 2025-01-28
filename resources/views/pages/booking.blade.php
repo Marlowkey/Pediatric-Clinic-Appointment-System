@@ -54,7 +54,6 @@
                                     </select>
                                 </div>
                             </div>
-
                         </div>
 
                         <div class="row">
@@ -128,7 +127,7 @@
             const day = selectedDate.getUTCDay(); // 0 = Sunday, 1 = Monday, ..., 6 = Saturday
 
             if (day === 0) {
-                alert("Sorry, bookings are not allowed on Sundays.");
+                alert("Sorry, reservations cannot be made on Sundays.");
                 return false;
             }
             return true;

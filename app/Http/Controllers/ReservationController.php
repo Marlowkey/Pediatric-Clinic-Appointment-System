@@ -96,7 +96,6 @@ class ReservationController extends Controller
         return view('pages.booking', compact('availableTimes', 'user', 'phoneNumber'));
     }
 
-
     public function getMyReservations()
     {
         $availableTimes = AvailableTime::all()->map(function ($time) {
@@ -112,8 +111,8 @@ class ReservationController extends Controller
         $user = auth()->user();
 
         $reservations = Reservation::where('user_id', $user->id)
-        ->orderBy('schedule_date', 'desc')
-        ->paginate(5);
+            ->orderBy('schedule_date', 'desc')
+            ->paginate(5);
 
         return view('pages.reservations', compact('availableTimes', 'user', 'reservations'));
     }
@@ -128,6 +127,15 @@ class ReservationController extends Controller
             'phone_number' => 'required|regex:/^\+639[0-9]{9}$/', // Ensures phone number starts with +639 and is 12 digits long
             'message' => 'nullable|string',
         ]);
+
+        // Check if the schedule date is a Sunday
+        $scheduleDate = Carbon::parse($request->schedule_date);
+        if ($scheduleDate->isSunday()) {
+            return redirect()
+                ->back()
+                ->withErrors(['schedule_date' => 'Reservations cannot be made on Sundays.']);
+        }
+        
 
         $exists = Reservation::where('schedule_date', $request->schedule_date)
             ->where('available_time_id', $request->available_time_id)

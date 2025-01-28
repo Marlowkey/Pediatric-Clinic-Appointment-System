@@ -19,16 +19,17 @@
                 <i class="text-success fa fa-tachometer-alt me-2"></i>Home
             </a>
 
-            <!-- Availability (Admins only) -->
+            {{-- <!-- Availability (Admins only) -->
             @if (auth()->user()->role->name === 'admin')
-                <a href="{{ route('available-times.index') }}" class="nav-item nav-link text-dark">
-                    <i class="text-success fa fa-book me-2"></i>Availability
-                </a>
-            @endif
+
+            @endif --}}
 
             <!-- Appointments (Admins and Doctors) -->
             @if (auth()->user()->role->name === 'doctor' || auth()->user()->role->name === 'admin')
-                <a href="{{ route('reservations.index') }}" class="nav-item nav-link text-dark">
+            <a href="{{ route('available-times.index') }}" class="nav-item nav-link text-dark">
+                <i class="text-success fa fa-book me-2"></i>Availability
+            </a>
+            <a href="{{ route('reservations.index') }}" class="nav-item nav-link text-dark">
                     <i class="text-success fa fa-calendar-check me-2"></i>Appointments
                 </a>
 
