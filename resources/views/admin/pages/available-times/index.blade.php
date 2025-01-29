@@ -120,10 +120,13 @@
                         <!-- Button to mark the date as available again -->
                         <form action="{{ route('unavailable-dates.make-available', $unavailableDate->id) }}" method="POST">
                             @csrf
+                            @method('DELETE') <!-- Simulate the DELETE HTTP method -->
+                            <input type="hidden" name="date" value="{{ request()->get('date') }}">
                             <button type="submit" class="btn btn-sm btn-success">
                                 <i class="ri-check-line me-1"></i> Mark Entire Date as Available
                             </button>
                         </form>
+
                     @else
                         <!-- Button to mark the date as unavailable -->
                         <form action="{{ route('unavailable-dates.make-unavailable') }}" method="POST">
@@ -213,6 +216,8 @@
                         <!-- Button to mark the date as available again -->
                         <form action="{{ route('unavailable-dates.make-available', $unavailableDate->id) }}" method="POST">
                             @csrf
+                            @method('DELETE') <!-- Simulate the DELETE HTTP method -->
+                            <input type="hidden" name="date" value="{{ request()->get('date') }}">
                             <button type="submit" class="btn btn-sm btn-success">
                                 <i class="ri-check-line me-1"></i> Mark Entire Date as Available
                             </button>

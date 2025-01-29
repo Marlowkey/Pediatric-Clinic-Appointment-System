@@ -2,11 +2,12 @@
 
 namespace App\Http\Controllers;
 
-use Illuminate\Support\Facades\Log;
 use Carbon\Carbon;
 use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Models\AvailableTime;
+use App\Models\UnavailableDate;
+use Illuminate\Support\Facades\Log;
 use App\Services\SmsNotificationService;
 
 class ReservationController extends Controller
@@ -110,9 +111,7 @@ class ReservationController extends Controller
 
         $user = auth()->user();
 
-        $reservations = Reservation::where('user_id', $user->id)
-            ->orderBy('schedule_date', 'desc')
-            ->paginate(5);
+        $reservations = Reservation::where('user_id', $user->id)->orderBy('schedule_date', 'desc')->paginate(5);
 
         return view('pages.reservations', compact('availableTimes', 'user', 'reservations'));
     }
@@ -128,18 +127,21 @@ class ReservationController extends Controller
             'message' => 'nullable|string',
         ]);
 
-        // Check if the schedule date is a Sunday
         $scheduleDate = Carbon::parse($request->schedule_date);
         if ($scheduleDate->isSunday()) {
             return redirect()
                 ->back()
                 ->withErrors(['schedule_date' => 'Reservations cannot be made on Sundays.']);
         }
-        
 
-        $exists = Reservation::where('schedule_date', $request->schedule_date)
-            ->where('available_time_id', $request->available_time_id)
-            ->exists();
+        $isUnavailable = UnavailableDate::where('date', $request->schedule_date)->exists();
+        if ($isUnavailable) {
+            return redirect()
+                ->back()
+                ->withErrors(['schedule_date' => 'Reservations cannot be made on this date as it is unavailable.']);
+        }
+
+        $exists = Reservation::where('schedule_date', $request->schedule_date)->where('available_time_id', $request->available_time_id)->exists();
 
         if ($exists) {
             return redirect()
@@ -160,7 +162,7 @@ class ReservationController extends Controller
             'guardian_name' => $request->guardian_name,
             'phone_number' => $request->phone_number,
             'message' => $request->message,
-            'user_id' => $userId, // Use the variable with the user ID
+            'user_id' => $userId,
         ]);
 
         $successMessage = 'Reservation created successfully!';
@@ -249,10 +251,7 @@ class ReservationController extends Controller
             'available_time_id' => 'required|exists:available_times,id',
         ]);
 
-        $exists = Reservation::where('schedule_date', $request->schedule_date)
-            ->where('available_time_id', $request->available_time_id)
-            ->where('id', '!=', $reservation->id)
-            ->exists();
+        $exists = Reservation::where('schedule_date', $request->schedule_date)->where('available_time_id', $request->available_time_id)->where('id', '!=', $reservation->id)->exists();
 
         if ($exists) {
             return redirect()

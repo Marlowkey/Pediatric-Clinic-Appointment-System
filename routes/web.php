@@ -64,7 +64,7 @@ Route::delete('available-times/{id}/make-available', [AvailableTimeController::c
 
 
 Route::post('unavailable-dates/make-unavailable', [AvailableTimeController::class, 'makeDateUnavailable'])->name('unavailable-dates.make-unavailable');
-Route::post('unavailable-dates/{id}/make-available', [AvailableTimeController::class, 'makeDateAvailable'])->name('unavailable-dates.make-available');
+Route::delete('unavailable-dates/{id}/make-available', [AvailableTimeController::class, 'makeDateAvailable'])->name('unavailable-dates.make-available');
 
 Route::resource('users', UserController::class);
 

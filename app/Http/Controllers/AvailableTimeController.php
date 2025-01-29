@@ -32,9 +32,8 @@ class AvailableTimeController extends Controller
         })->get();
 
         $unavailableTimes = UnavailableTimeSlot::whereDate('date', $date)
-        ->with('availableTime') // Eager load the related AvailableTime
-        ->get();
-
+            ->with('availableTime') // Eager load the related AvailableTime
+            ->get();
 
         $timeSlots = AvailableTime::all();
 
@@ -119,7 +118,6 @@ class AvailableTimeController extends Controller
             ->with('success', 'Time slot marked as available again.');
     }
 
-
     public function makeDateUnavailable(Request $request)
     {
         $request->validate([
@@ -136,15 +134,27 @@ class AvailableTimeController extends Controller
             'date' => $request->date,
         ]);
 
-        return redirect()->route('available-times.index')->with('success', 'Date marked as unavailable.');
+        // Redirect with the 'date' parameter included
+        return redirect()
+            ->route('available-times.index', ['date' => $request->date])
+            ->with('success', 'Date marked as unavailable.');
     }
 
-    public function makeDateAvailable($id)
+    public function makeDateAvailable($id, Request $request)
     {
+        $request->validate([
+            'date' => 'nullable|date',
+        ]);
+
         $unavailableDate = UnavailableDate::findOrFail($id);
 
         $unavailableDate->delete();
 
-        return redirect()->route('available-times.index')->with('success', 'Date marked as available again.');
+        $date = $request->get('date', now()->toDateString());
+
+        return redirect()
+            ->route('available-times.index', ['date' => $date])
+            ->with('success', 'Date marked as available again.');
     }
+
 }
