@@ -18,7 +18,6 @@
     </section>
 
     <section class="site-section bg-gray-100">
-
         <div class="container" >
             <x-alerts />
             <h2 class="mb-5 fw-bolder text-start">Appointments</h2>

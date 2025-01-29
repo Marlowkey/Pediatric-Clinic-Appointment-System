@@ -1,7 +1,6 @@
 @extends('layouts.admin')
 @section('title', 'Dashboard')
 @section('content')
-
 <div class="col-lg-12">
     <div class="h-100">
         <div class="px-4 py-4">

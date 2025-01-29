@@ -14,8 +14,7 @@
             <x-nav-item route="home">Home</x-nav-item>
             <x-nav-item route="about">About</x-nav-item>
             <x-nav-item route="contact">Contact</x-nav-item>
-            <x-nav-item route="reservations.my_reservations">Appointments</x-nav-item>
-
+            <x-nav-item route="patient.dashboard">Dashboard</x-nav-item>
           <li class="nav-item cta">
             <a class="nav-link text-white fw-normal fs-5" href="{{ route('reservations.book') }}"><span>Book Now</span></a>
           </li>

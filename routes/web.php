@@ -17,6 +17,9 @@ Route::get('/', function () {
     return view('auth/login');
 });
 
+Route::middleware('auth')->group(function () {
+    Route::get('/patient-dashboard', [HomeController::class, 'patientDashboard'])->name('patient.dashboard');
+});
 
 Route::get('/home', [HomeController::class, 'index'])
     ->middleware(['auth', 'verified'])

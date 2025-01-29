@@ -35,27 +35,37 @@
 <div class="sidebar pe-4 pb-3">
     <nav class="navbar navbar-light">
         <!-- Logo and Clinic Name -->
-        <div class="d-flex flex-column align-items-center text-center mx-4 mb-3">
-            <div class="position-relative me-2">
-                <img src="{{ asset('logo/logo_solid.png') }}" alt="Logo" class="logo-icon"
-                    style="width: 56.8px; height: 56.8px;">
+        <a href="{{ route('home') }}" class="text-decoration-none"> <!-- Assuming you're using Laravel's route helper -->
+            <div class="d-flex flex-column align-items-center text-center mx-4 mb-3">
+                <div class="position-relative me-2">
+                    <img src="{{ asset('logo/logo_solid.png') }}" alt="Logo" class="logo-icon"
+                        style="width: 56.8px; height: 56.8px;">
+                </div>
+                <div class="mt-2">
+                    <h5 class="text-dark mb-0">Clarianes Pediatric</h5>
+                    <h5 class="text-dark">Clinic</h5>
+                </div>
             </div>
-            <div class="mt-2">
-                <h5 class="text-dark mb-0">Clarianes Pediatric</h5>
-                <h5 class="text-dark">Clinic</h5>
-            </div>
-        </div>
+        </a>
 
         <!-- Navigation Links -->
         <div class="navbar-nav w-100">
-            <!-- Home (Always visible) -->
-            <a href="{{ route('admin.pages.dashboard') }}"
-                class="nav-item nav-link {{ request()->routeIs('home') ? 'active' : '' }} text-dark">
-                <i class="text-success fa fa-tachometer-alt me-2"></i>Home
-            </a>
+            <!-- Pending Appointments (Admins only) -->
+            @if (auth()->user()->role->name === 'patient')
+                <a href="{{ route('patient.dashboard') }}"
+                    class="nav-item nav-link  text-dark">
+                    <i class="text-success fa fa-tachometer-alt me-2"></i>Home
+                </a>
+            @endif
 
             <!-- Appointments (Admins and Doctors) -->
             @if (auth()->user()->role->name === 'doctor' || auth()->user()->role->name === 'admin')
+                <!-- Home (Always visible) -->
+                <a href="{{ route('admin.pages.dashboard') }}"
+                    class="nav-item nav-link {{ request()->routeIs('home') ? 'active' : '' }} text-dark">
+                    <i class="text-success fa fa-tachometer-alt me-2"></i>Home
+                </a>
+
                 <a href="{{ route('available-times.index') }}"
                     class="nav-item nav-link {{ request()->routeIs('available-times.index') ? 'active' : '' }} text-dark">
                     <i class="text-success fa fa-book me-2"></i>Availability
