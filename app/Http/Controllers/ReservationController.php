@@ -186,9 +186,23 @@ class ReservationController extends Controller
 
         $reservation = Reservation::findOrFail($id);
 
+        $scheduleDate = Carbon::parse($request->schedule_date);
+        if ($scheduleDate->isSunday()) {
+            return redirect()
+                ->back()
+                ->withErrors(['schedule_date' => 'Reservations cannot be made on Sundays.']);
+        }
+
+        $isUnavailable = UnavailableDate::where('date', $request->schedule_date)->exists();
+        if ($isUnavailable) {
+            return redirect()
+                ->back()
+                ->withErrors(['schedule_date' => 'Reservations cannot be made on this date as it is unavailable.']);
+        }
+
         $exists = Reservation::where('schedule_date', $request->schedule_date)
             ->where('available_time_id', $request->available_time_id)
-            ->where('id', '!=', $reservation->id) // Exclude the current reservation
+            ->where('id', '!=', $reservation->id)
             ->exists();
 
         if ($exists) {
