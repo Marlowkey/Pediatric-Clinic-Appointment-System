@@ -176,8 +176,8 @@
                             <tbody class="table-border-bottom-0">
                                 @forelse ($unavailableTimes as $time)
                                     <tr>
-                                        <td>{{ \Carbon\Carbon::parse($time->start_time)->format('h:i A') }}</td>
-                                        <td>{{ \Carbon\Carbon::parse($time->end_time)->format('h:i A') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($time->availableTime->start_time)->format('h:i A') }}</td>
+                                        <td>{{ \Carbon\Carbon::parse($time->availableTime->end_time)->format('h:i A') }}</td>
                                         <td>
                                             <div class="dropdown">
                                                 <button type="button" class="btn p-0 dropdown-toggle hide-arrow"
@@ -185,11 +185,16 @@
                                                     <i class="ri-more-2-line"></i>
                                                 </button>
                                                 <div class="dropdown-menu">
-                                                    <a class="dropdown-item"
-                                                        href="{{ route('available-times.make-available', $time->id) }}">
-                                                        <i class="ri-check-line me-1"></i> Make Available
-                                                    </a>
+                                                    <form action="{{ route('available-times.make-available', $time->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE') <!-- Use DELETE method if your route expects it -->
+                                                        <input type="hidden" name="date" value="{{ request()->get('date') }}">
+                                                        <button type="submit" class="dropdown-item">
+                                                            <i class="ri-check-line me-1"></i> Make Available
+                                                        </button>
+                                                    </form>
                                                 </div>
+
                                             </div>
                                         </td>
                                     </tr>

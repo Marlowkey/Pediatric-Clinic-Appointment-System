@@ -59,7 +59,10 @@ Route::put('available-times/{id}', [AvailableTimeController::class, 'update'])->
 Route::delete('/available-times/{id}', [AvailableTimeController::class, 'destroy'])->name('available-times.delete');
 Route::post('/available-times/{id}/unavailable', [AvailableTimeController::class, 'makeUnavailable'])
     ->name('available-times.make-unavailable');
-Route::get('available-times/{id}/make-available', [AvailableTimeController::class, 'makeAvailable'])->name('available-times.make-available');
+
+Route::delete('available-times/{id}/make-available', [AvailableTimeController::class, 'makeAvailable'])->name('available-times.make-available');
+
+
 Route::post('unavailable-dates/make-unavailable', [AvailableTimeController::class, 'makeDateUnavailable'])->name('unavailable-dates.make-unavailable');
 Route::post('unavailable-dates/{id}/make-available', [AvailableTimeController::class, 'makeDateAvailable'])->name('unavailable-dates.make-available');
 
