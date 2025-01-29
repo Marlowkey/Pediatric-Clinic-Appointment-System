@@ -97,24 +97,6 @@ class ReservationController extends Controller
         return view('pages.booking', compact('availableTimes', 'user', 'phoneNumber'));
     }
 
-    public function getMyReservations()
-    {
-        $availableTimes = AvailableTime::all()->map(function ($time) {
-            $start_time = Carbon::parse($time->start_time)->format('h:i A');
-            $end_time = Carbon::parse($time->end_time)->format('h:i A');
-
-            return [
-                'id' => $time->id,
-                'time_slot' => $start_time . ' - ' . $end_time,
-            ];
-        });
-
-        $user = auth()->user();
-
-        $reservations = Reservation::where('user_id', $user->id)->orderBy('schedule_date', 'desc')->paginate(5);
-
-        return view('pages.reservations', compact('availableTimes', 'user', 'reservations'));
-    }
 
     public function store(Request $request)
     {
