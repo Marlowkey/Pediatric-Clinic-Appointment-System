@@ -43,17 +43,14 @@ class SmsNotificationService
             $responseBody = $response->getBody()->getContents();
             $responseData = json_decode($responseBody, true);
 
-            // Check if the response indicates success
             if (isset($responseData['success']) && $responseData['success'] === true) {
                 Log::info("SMS sent successfully to {$number}: {$message}");
                 return true;
             } else {
-                // Log failure if 'success' is not true
                 Log::error("SMS sending failed: " . ($responseData['message'] ?? 'Unknown error'));
                 return false;
             }
         } catch (RequestException $e) {
-            // Catch any exceptions and log them
             $errorMessage = $e->hasResponse() ? $e->getResponse()->getBody()->getContents() : $e->getMessage();
             Log::error("SMS sending failed: {$errorMessage}");
             return false;

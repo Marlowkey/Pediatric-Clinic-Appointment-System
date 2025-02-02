@@ -7,6 +7,7 @@ use App\Models\Reservation;
 use Illuminate\Http\Request;
 use App\Models\AvailableTime;
 use App\Models\UnavailableDate;
+use App\Models\UnavailableTimeSlot;
 use Illuminate\Support\Facades\Log;
 use App\Services\SmsNotificationService;
 
@@ -97,7 +98,6 @@ class ReservationController extends Controller
         return view('pages.booking', compact('availableTimes', 'user', 'phoneNumber'));
     }
 
-
     public function store(Request $request)
     {
         $request->validate([
@@ -105,7 +105,7 @@ class ReservationController extends Controller
             'available_time_id' => 'required|exists:available_times,id',
             'patient_name' => 'required|string|max:255',
             'guardian_name' => 'required|string|max:255',
-            'phone_number' => 'required|regex:/^\+639[0-9]{9}$/', // Ensures phone number starts with +639 and is 12 digits long
+            'phone_number' => 'required|regex:/^\+639[0-9]{9}$/',
             'message' => 'nullable|string',
         ]);
 
@@ -116,11 +116,19 @@ class ReservationController extends Controller
                 ->withErrors(['schedule_date' => 'Reservations cannot be made on Sundays.']);
         }
 
-        $isUnavailable = UnavailableDate::where('date', $request->schedule_date)->exists();
-        if ($isUnavailable) {
+        $isUnavailableDate = UnavailableDate::where('date', $request->schedule_date)->exists();
+        if ($isUnavailableDate) {
             return redirect()
                 ->back()
                 ->withErrors(['schedule_date' => 'Reservations cannot be made on this date as it is unavailable.']);
+        }
+
+        $isUnavailableTimeSlot = UnavailableTimeSlot::where('date', $request->schedule_date)->where('available_time_id', $request->available_time_id)->exists();
+
+        if ($isUnavailableTimeSlot) {
+            return redirect()
+                ->back()
+                ->withErrors(['available_time_id' => 'This time slot is unavailable for the selected date.']);
         }
 
         $exists = Reservation::where('schedule_date', $request->schedule_date)->where('available_time_id', $request->available_time_id)->exists();
@@ -132,7 +140,6 @@ class ReservationController extends Controller
         }
 
         $availableTime = AvailableTime::findOrFail($request->available_time_id);
-
         $userId = auth()->user()->id;
 
         Reservation::create([
@@ -182,10 +189,15 @@ class ReservationController extends Controller
                 ->withErrors(['schedule_date' => 'Reservations cannot be made on this date as it is unavailable.']);
         }
 
-        $exists = Reservation::where('schedule_date', $request->schedule_date)
-            ->where('available_time_id', $request->available_time_id)
-            ->where('id', '!=', $reservation->id)
-            ->exists();
+        $isUnavailableTimeSlot = UnavailableTimeSlot::where('date', $request->schedule_date)->where('available_time_id', $request->available_time_id)->exists();
+
+        if ($isUnavailableTimeSlot) {
+            return redirect()
+                ->back()
+                ->withErrors(['available_time_id' => 'This time slot is unavailable for the selected date.']);
+        }
+
+        $exists = Reservation::where('schedule_date', $request->schedule_date)->where('available_time_id', $request->available_time_id)->where('id', '!=', $reservation->id)->exists();
 
         if ($exists) {
             return redirect()
