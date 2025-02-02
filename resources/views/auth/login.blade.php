@@ -10,19 +10,16 @@
                 <img src="{{ asset('logo/splash.png') }}" alt="Login Image"
                      class="img-fluid rounded w-100 h-100" style="object-fit: cover;" />
             </div>
-            <div class="col-lg-5 d-flex mx-6 mb-8 justify-content-center align-items-center rounded">
-
-                <div class="card-body px-6 py-2 text-black justify-content-center align-items-center"> <!-- Added shadow and rounded to the form -->
+            <div class="col-lg-5 mx-12 mb-8 py-4 justify-content-center align-items-center rounded w-full md:w-1/2 lg:w-5/12">
+                <div class="card-body px-6 py-16 text-black justify-content-center align-items-center"> <!-- Added shadow and rounded to the form -->
                     <form method="POST" action="{{ route('login') }}">
                         @csrf
-
-                        <div class="flex flex-col items-start mb-4 py-4">
+                        <div class="flex flex-col items-center text-center mb-4 py-4">
                             <h1 class="text-2xl font-bold mb-1">Login</h1>
                             <h5 class="fw-normal mb-0 pb-2" style="letter-spacing: 1px;">
                                 Sign in to your account
                             </h5>
                         </div>
-
                         <div class="mb-4">
                             <label for="login" class="text-sm font-medium text-gray-700">
                                 Email or Phone Number

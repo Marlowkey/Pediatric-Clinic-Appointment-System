@@ -9,24 +9,26 @@
              <div class="col-lg-6 d-none d-md-block rounded">
                 <img src="{{ asset('logo/splash.png') }}" alt="Login Image" class="img-fluid rounded w-100 h-full object-cover" />
             </div>
-            <div class="col-md-6 d-flex justify-content-center align-items-center mx-3">
+            <div class="col-lg-6 d-flex justify-content-center align-items-center mx-3 p-6">
                 <div class="card-body text-black w-full max-w-lg mx-auto h-auto">
                     <form method="POST" action="{{ route('register') }}">
                         @csrf
-                        <div class="flex flex-col items-start ">
-                            <h1 class="text-2xl font-bold mb-1">Register</h1>
-                            <h5 class="fw-normal mb-0 pb-2" style="letter-spacing: 1px;">
+                        <div class="flex flex-col items-center mb-4 py-4">
+                            <h1 class="text-2xl font-bold mb-1 text-center">Register</h1>
+                            <h5 class="fw-normal mb-0 pb-2 text-center" style="letter-spacing: 1px;">
                                 Sign up to your account. <span class="text-red-600">Please ensure your phone number is valid as an OTP will be sent to verify it.</span>
-                            </h5>                        </div>
+                            </h5>
+                        </div>
 
-                        <div class="row flex">
-                            <div class="mb-3 mr-3 form-group">
+                        <!-- Name and Email Fields -->
+                        <div class="row">
+                            <div class="col-12 col-md-6 mb-3">
                                 <x-input-label for="name" :value="__('Name')" class="text-lg fw-bold" />
                                 <x-text-input id="name" class="block mt-1 w-full" type="text" name="name"
                                     :value="old('name')" required autofocus autocomplete="name" />
                                 <x-input-error :messages="$errors->get('name')" class="mt-2" />
                             </div>
-                            <div class="mb-3 form-group">
+                            <div class="col-12 col-md-6 mb-3">
                                 <x-input-label for="email" :value="__('Email')" class="text-lg fw-bold" />
                                 <x-text-input id="email" class="block mt-1 w-full" type="email" name="email"
                                     :value="old('email')" required autocomplete="username" />
@@ -35,25 +37,27 @@
                         </div>
 
                         <!-- Phone Number Field -->
-                        <div class="mb-3 form-group">
+                        <div class="mb-3">
                             <x-input-label for="pNumber" :value="__('Phone Number')" class="text-lg fw-bold" />
                             <x-text-input id="pNumber" class="block mt-1 w-full" type="text" name="phone"
                                 :value="old('phone')" required autocomplete="phone" />
                             <x-input-error :messages="$errors->get('phone')" class="mt-2" />
                         </div>
 
-                        <div class="mb-4 form-group">
+                        <!-- Password Fields -->
+                        <div class="mb-4">
                             <x-input-label for="password" :value="__('Password')" class="text-lg fw-bold" />
                             <div class="relative">
-                                <x-text-input id="password" class="block mt-1 w-full pr-10" type="password"
-                                    name="password" required autocomplete="new-password" />
+                                <x-text-input id="password" class="block mt-1 w-full pr-10" type="password" name="password"
+                                    required autocomplete="new-password" />
                                 <i id="togglePassword1"
                                     class="fas fa-eye absolute right-3 top-1/2 transform -translate-y-1/2 cursor-pointer"></i>
                             </div>
                             <x-input-error :messages="$errors->get('password')" class="mt-2" />
                         </div>
 
-                        <div class="mb-3 form-group">
+                        <!-- Confirm Password Field -->
+                        <div class="mb-3">
                             <x-input-label for="password_confirmation" :value="__('Confirm Password')" class="text-lg fw-bold" />
                             <div class="relative">
                                 <x-text-input id="password_confirmation" class="block mt-1 w-full pr-10" type="password"
@@ -83,6 +87,7 @@
                     </form>
                 </div>
             </div>
+
         </div>
 
     </section>
