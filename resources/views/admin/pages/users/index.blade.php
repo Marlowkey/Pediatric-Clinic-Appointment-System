@@ -76,12 +76,12 @@
         </div>
 
 
-        <div class="d-flex justify-content-between mb-4 align-items-center">
+        <div class="d-flex justify-content-between align-items-center">
             <!-- Search Component -->
             <x-search-form id="appointmentSearch" placeholder="Search Users" />
 
             <!-- Date Filter -->
-            <div class="me-3">
+            <div class="me-3 mb-6">
                 <label for="filterRole" class="form-label">Filter by Role:</label>
                 <select id="filterRole" class="form-control" onchange="filterTable()">
                     <option value="">All Roles</option>

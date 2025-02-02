@@ -87,11 +87,11 @@
             </div>
         </div>
         <!-- Filter Form -->
-        <div class="d-flex justify-content-between align-items-center mb-4">
+        <div class="d-flex justify-content-between align-items-center">
             <!-- Search Form -->
             <x-search-form id="appointmentSearch" placeholder="Search Appointments" />
             <!-- Date Filter -->
-            <div>
+            <div class="mb-6">
                 <label for="filterDate" class="form-label">Filter by Date:</label>
                 <input type="date" id="filterDate" class="form-control" />
             </div>
