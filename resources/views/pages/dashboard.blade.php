@@ -11,12 +11,12 @@
                 </div>
             </div>
             <div class="card-body pt-lg-10 px-4 py-6">
-                <div class="row g-6 justify-content-center mb-12">
+                <div class="row g-6 justify-content-start mb-12 mx-6">
                     <!-- Total Reservations for Patient -->
-                    <div class="col-md-3 col-6 d-flex justify-content-center">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-4 d-flex justify-content-start mb-4 mb-md-0">
                         <div class="d-flex align-items-center">
                             <div class="avatar">
-                                <div class="avatar-initial  bg-success rounded shadow-xs">
+                                <div class="avatar-initial bg-success rounded shadow-xs">
                                     <i class="ri-calendar-check-line ri-24px"></i> <!-- Reservations icon -->
                                 </div>
                             </div>
@@ -27,23 +27,8 @@
                         </div>
                     </div>
 
-                    {{-- <!-- Reservations Today for Patient -->
-                    <div class="col-md-3 col-6 d-flex justify-content-center">
-                        <div class="d-flex align-items-center">
-                            <div class="avatar">
-                                <div class="avatar-initial bg-success rounded shadow-xs">
-                                    <i class="ri-calendar-line ri-24px"></i> <!-- Appointments icon -->
-                                </div>
-                            </div>
-                            <div class="ms-3">
-                                <p class="mb-0">Reservations Today</p>
-                                <h5 class="mb-0">{{ number_format($reservationsToday) }}</h5>
-                            </div>
-                        </div>
-                    </div> --}}
-
                     <!-- Upcoming Reservations for Patient -->
-                    <div class="col-md-3 col-6 d-flex justify-content-center">
+                    <div class="col-12 col-sm-6 col-md-4 col-lg-4 d-flex justify-content-start mb-4 mb-md-0">
                         <div class="d-flex align-items-center">
                             <div class="avatar">
                                 <div class="avatar-initial bg-success rounded shadow-xs">
@@ -58,7 +43,7 @@
                     </div>
 
                     <!-- Completed Reservations for Patient -->
-                    <div class="col-md-3 col-6 d-flex justify-content-center">
+                    <div class="col-12 col-sm-12 col-md-4 col-lg-4 d-flex justify-content-start">
                         <div class="d-flex align-items-center">
                             <div class="avatar">
                                 <div class="avatar-initial bg-success rounded shadow-xs">
@@ -72,6 +57,7 @@
                         </div>
                     </div>
                 </div>
+
 
                 <div class="container">
                     <x-alerts />
