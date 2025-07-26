@@ -1,4 +1,4 @@
-# Clarianes Booking System - Comprehensive Functionality Documentation
+# Pediatric Clinic Appointment System
 
 ## Table of Contents
 1. [System Overview](#system-overview)
@@ -16,12 +16,12 @@
 
 ## System Overview
 
-The Clarianes Booking System is a comprehensive web-based appointment scheduling platform built with Laravel 11. The system facilitates appointment booking between patients and healthcare providers, featuring a robust admin panel for managing schedules, reservations, and user accounts.
+The Pediatric Clinic Appointment System is a comprehensive web-based appointment scheduling platform built with Laravel 11. The system facilitates appointment booking between patients and healthcare providers, featuring a robust admin panel for managing schedules, reservations, and user accounts.
 
 ### Key Features
 - **Multi-role User System**: Patients and Administrators
 - **Real-time Appointment Booking**: Dynamic scheduling with availability management
-- **SMS Notifications**: Automated communication via Twilio/PhilSMS integration
+- **SMS Notifications**: Automated communication via PhilSMS integration
 - **Admin Dashboard**: Comprehensive management interface
 - **Responsive Design**: Modern UI built with Tailwind CSS
 - **Search & Filtering**: Advanced appointment management tools
@@ -37,13 +37,6 @@ The Clarianes Booking System is a comprehensive web-based appointment scheduling
 - **Profile Management**: Update personal information, phone numbers, and contact details
 - **Phone Verification**: OTP-based phone number verification for SMS notifications
 - **Account Security**: Password management and session handling
-
-### User Data Fields
-- Name, Email, Phone Number
-- Guardian Name (for patient bookings)
-- Role assignment (patient/admin)
-- Email and phone verification status
-- Account creation and update timestamps
 
 ## Authentication & Authorization
 
@@ -120,7 +113,7 @@ The Clarianes Booking System is a comprehensive web-based appointment scheduling
 ## Admin Panel
 
 ### Dashboard Overview
-- **System Statistics**: Overview of appointments, users, and system status
+- **System Statistics**: Overview of appointments, users
 - **Quick Actions**: Fast access to common admin tasks
 - **Recent Activity**: Latest system activities and updates
 
@@ -147,19 +140,10 @@ The Clarianes Booking System is a comprehensive web-based appointment scheduling
 ### SMS Integration
 - **PhilSMS API**: Integration with Philippine SMS service
 - **Automated Notifications**: Booking confirmations and updates
-- **Custom Messages**: Personalized SMS content
-- **Delivery Tracking**: SMS delivery status monitoring
-
-### Email System
-- **Contact Form**: Website contact form with email notifications
-- **System Notifications**: Automated email alerts
-- **Template System**: Customizable email templates
 
 ### Notification Types
 - **Booking Confirmations**: Appointment confirmation messages
 - **Status Updates**: Appointment status change notifications
-- **Reminders**: Appointment reminder messages
-- **System Alerts**: Administrative notifications
 
 ## Search & Filtering
 
@@ -172,7 +156,6 @@ The Clarianes Booking System is a comprehensive web-based appointment scheduling
 ### Search Features
 - **Real-time Search**: Instant search results
 - **Multiple Criteria**: Combine multiple search parameters
-- **Export Capabilities**: Export search results
 - **Pagination**: Handle large result sets
 
 ## Technical Architecture
@@ -183,12 +166,6 @@ The Clarianes Booking System is a comprehensive web-based appointment scheduling
 - **Tailwind CSS**: Frontend styling framework
 - **Alpine.js**: JavaScript framework for interactivity
 - **Vite**: Frontend build tool
-
-### Key Dependencies
-- **Spatie Laravel Permission**: Role and permission management
-- **Twilio SDK**: SMS service integration
-- **Carbon**: Date and time manipulation
-- **Guzzle HTTP**: API client for external services
 
 ### File Structure
 ```
